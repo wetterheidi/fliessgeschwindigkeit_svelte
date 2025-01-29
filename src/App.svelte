@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	let strickler = 0;
 	let gefaelle = 0;
 	let querschnitt = "";
@@ -6,9 +6,6 @@
 	let age = "";
 	let message = "";
 
-	function handleBerechnen() {
-		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
-	}
 
 	// Define an array of options for the dropdown
 	let options = ["Option 1", "Option 2", "Option 3"];
@@ -82,6 +79,55 @@
 	}
 	$: selectedBewuchs = bewuechse[0];
 
+	$: {
+		if (selectedKategory === "Bach") {
+			switch (bewuechse.indexOf(selectedBewuchs)) {
+				case 0: strickler = 30; break;
+				case 1: strickler = 22.5; break;
+				case 2: strickler = 15; break;
+				case 3: strickler = 22.5; break;
+				case 4: strickler = 15; break;
+				case 5: strickler = 30; break;
+				case 6: strickler = 90; break;
+				case 7: strickler = 60; break;
+				case 8: strickler = 75; break;
+				case 9: strickler = 50; break;
+				case 10: strickler = 40; break;
+				case 11: strickler = 40; break;
+			}
+		} else if (selectedKategory === "Fluss") {
+			switch (bewuechse.indexOf(selectedBewuchs)) {
+				case 0: strickler = 35; break;
+				case 1: strickler = 30; break;
+				case 2: strickler = 25; break;
+				case 3: strickler = 20; break;
+				case 4: strickler = 90; break;
+				case 5: strickler = 60; break;
+				case 6: strickler = 50; break;
+				case 7: strickler = 40; break;
+				case 8: strickler = 40; break;
+			}
+		} else if (selectedKategory === "Kanal") {
+			switch (bewuechse.indexOf(selectedBewuchs)) {
+				case 0: strickler = 40; break;
+				case 1: strickler = 30; break;
+				case 2: strickler = 90; break;
+				case 3: strickler = 60; break;
+				case 4: strickler = 70; break;
+				case 5: strickler = 75; break;
+			}
+		} else if (selectedKategory === "Sonstige Fläche") {
+			switch (bewuechse.indexOf(selectedBewuchs)) {
+				case 0: strickler = 90; break;
+				case 1: strickler = 60; break;
+				case 2: strickler = 70; break;
+				case 3: strickler = 75; break;
+				case 4: strickler = 50; break;
+				case 5: strickler = 35; break;
+			}
+		}
+	}
+
 	//Querschnitte definieren
 	let querschnitte = [
 		"Rechteck",
@@ -142,6 +188,33 @@
 		breiteuntenVisible = false;
 		xVisible = false;
 	}
+
+	function handleBerechnen() {
+		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
+		if (strickler === 0) {
+			alert("Erst Stricklerbeiwert eingeben!");
+			return;
+		}
+		if (gefaelle === 0) {
+			alert("Erst Gefälle eingeben!");
+			return;
+		}
+		
+        //dann ausrechnen!
+		if (selectedQuerschnitt === "Rechteck") {
+			//Tu was in Rechteck steht
+		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
+			//Tu was in Gleichschenkliges Trapez steht
+		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
+			//Tu was in Allgemeines Trapez steht
+		} else if (selectedQuerschnitt === "Rohrsegment") {
+			//Tu was in Rohrsegment steht
+		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
+			//Tu was in Benutzerdefiniert steht
+		} else {
+			message = "Fehler!";
+		}
+	}
 </script>
 
 <main>
@@ -191,49 +264,51 @@
 	</div>
 
 	{#if imageSrc}
-		<img src={imageSrc} alt="Querschnitt Bild" />
-	{/if}
+		<div class="image-input-group">
+			<img src={imageSrc} alt="Querschnitt Bild" />
+			<div class="input-fields">
+				{#if breiteVisible}
+					<div class="form-group">
+						<label for="breite">b</label>
+						<input id="breite" type="number" placeholder="50" />
+						<label for="breite">m</label>
+					</div>
+				{/if}
 
-	{#if breiteVisible}
-		<div class="form-group">
-			<label for="breite">b</label>
-			<input id="breite" type="number" placeholder="50" />
-			<label for="breite">m</label>
+				{#if hoeheVisible}
+					<div class="form-group">
+						<label for="hoehe">h</label>
+						<input id="hoehe" type="number" placeholder="50" />
+						<label for="hoehe">m</label>
+					</div>
+				{/if}
+
+				{#if breiteobenVisible}
+					<div class="form-group">
+						<label for="breiteoben">b<sub>o</sub></label>
+						<input id="breiteoben" type="number" placeholder="50" />
+						<label for="breiteoben">m</label>
+					</div>
+				{/if}
+
+				{#if breiteuntenVisible}
+					<div class="form-group">
+						<label for="breiteunten">b<sub>u</sub></label>
+						<input id="breiteunten" type="number" placeholder="50" />
+						<label for="breiteunten">m</label>
+					</div>
+				{/if}
+
+				{#if xVisible}
+					<div class="form-group">
+						<label for="x">h</label>
+						<input id="x" type="number" placeholder="50" />
+						<label for="x">m</label>
+					</div>
+				{/if}
+			</div>
 		</div>
 	{/if}
-
-	{#if hoeheVisible}
-		<div class="form-group">
-			<label for="hoehe">h</label>
-			<input id="hoehe" type="number" placeholder="50" />
-			<label for="hoehe">m</label>
-		</div>
-	{/if}
-
-	{#if breiteobenVisible}
-		<div class="form-group">
-			<label for="breiteoben">b<sub>o</sub></label>
-			<input id="breiteoben" type="number" placeholder="50" />
-			<label for="breiteoben">m</label>
-		</div>
-	{/if}
-
-	{#if breiteuntenVisible}
-		<div class="form-group">
-			<label for="breiteunten">b<sub>u</sub></label>
-			<input id="breiteunten" type="number" placeholder="50" />
-			<label for="breiteunten">m</label>
-		</div>
-	{/if}
-
-	{#if xVisible}
-		<div class="form-group">
-			<label for="x">h</label>
-			<input id="x" type="number" placeholder="50" />
-			<label for="x">m</label>
-		</div>
-	{/if}
-
 
 	<div class="form-group">
 		<label for="flaeche">Querschnittsfläche</label>
@@ -247,7 +322,7 @@
 	</div>
 	<div class="form-group">
 		<label for="umfang">Benetzter Umfang</label>
-		<input id="umfang" type="integer" bind:value={umfang} placeholder="1" />
+		<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
 		<label for="">m</label>
 	</div>
 	<div class="form-group">
@@ -283,18 +358,7 @@
 		<p>{message}</p>
 	{/if}
 
-	<h1>Simple Dropdown Box in Svelte</h1>
-
-	<div>
-		<label for="dropdown">Choose an option:</label>
-		<select id="dropdown" bind:value={selectedOption}>
-			{#each options as option}
-				<option value={option}>{option}</option>
-			{/each}
-		</select>
-	</div>
-
-	<p>Selected option: {selectedOption}</p>
+	<p>Selected option: {selectedQuerschnitt}</p>
 </main>
 
 <style>
@@ -318,6 +382,7 @@
 
 	label {
 		margin-right: 0.5rem;
+		margin-left: 0.5rem;
 	}
 
 	input {
@@ -336,8 +401,31 @@
 		font-size: 1.2rem;
 	}
 
+	.image-input-group {
+		display: flex;
+		align-items: center;
+	}
+
+	.input-fields {
+		margin-left: 1rem;
+	}
+
+	.input-fields .form-group {
+		margin-bottom: 0.2rem;
+		display: flex;
+		justify-content: center;
+	}
+
 	img {
 		max-width: 100%;
 		height: 100px;
+	}
+
+	input[type="integer"] {
+		width: 8ch;
+	}
+
+	input[type="number"] {
+		width: 8ch;
 	}
 </style>
