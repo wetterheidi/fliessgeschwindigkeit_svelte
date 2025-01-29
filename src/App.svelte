@@ -322,48 +322,67 @@
 
 	<hr />
 
-	<div class="form-group">
-		<label for="flaeche">Querschnittsfläche</label>
-		<input
-			id="flaeche"
-			type="integer"
-			bind:value={flaeche}
-			placeholder="1"
-		/>
-		<label for="">m<sup>2</sup></label>
-	</div>
-	<div class="form-group">
-		<label for="umfang">Benetzter Umfang</label>
-		<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
-		<label for="">m</label>
-	</div>
-	<div class="form-group">
-		<label for="geschwindigkeit">Geschwindigkeit</label>
-		<input
-			id="geschwindigkeitms"
-			type="integer"
-			bind:value={geschwindigkeitms}
-			placeholder="1"
-		/>
-		<label for=""> m/s</label>
-		<input
-			id="geschwindigkeitkt"
-			type="integer"
-			bind:value={geschwindigkeitkt}
-			placeholder="1"
-		/>
-		<label for="">kt</label>
-	</div>
-	<div class="form-group">
-		<label for="durchfluss">Durchfluss</label>
-		<input
-			id="durchfluss"
-			type="integer"
-			bind:value={durchfluss}
-			placeholder="1"
-		/>
-		<label for=""> m<sup>3</sup>/s</label>
-	</div>
+	<table class="form-table">
+		<tr>
+			<td>
+				<label for="flaeche">Querschnittsfläche</label>
+			</td>
+			<td>
+				<input id="flaeche" type="integer" bind:value={flaeche} placeholder="1" />
+			</td>
+			<td>
+				<label for="">m<sup>2</sup></label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="umfang">Benetzter Umfang</label>
+			</td>
+			<td>
+				<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
+			</td>
+			<td>
+				<label for="">m</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="geschwindigkeit">Geschwindigkeit</label>
+			</td>
+			<td>
+				<input id="geschwindigkeitms" type="integer" bind:value={geschwindigkeitms} placeholder="1" />
+			</td>
+			<td>
+				<label for=""> m/s</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="geschwindigkeitkt">Geschwindigkeit</label>
+			</td>
+			<td>
+				<input id="geschwindigkeitkt" type="integer" bind:value={geschwindigkeitkt} placeholder="1" />
+			</td>
+			<td>
+				<label for="">kt</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="durchfluss">Durchfluss</label>
+			</td>
+			<td>
+				<input id="durchfluss" type="integer" bind:value={durchfluss} placeholder="1" />
+			</td>
+			<td>
+				<label for=""> m<sup>3</sup>/s</label>
+			</td>
+		</tr>
+	</table>
+
+	<hr />
+
+
 	<button on:click={handleBerechnen}>Berechnen</button>
 
 	{#if message}
@@ -451,5 +470,26 @@
 
 	input[type="number"] {
 		width: 8ch;
+	}
+
+	.form-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 1rem;
+	}
+
+	.form-table td {
+		padding: 0.2rem;
+	}
+
+	.form-table label {
+		margin-right: 0.5rem;
+		margin-left: 0.5rem;
+	}
+
+	.form-table input {
+		padding: 0.2rem;
+		font-size: 1rem;
+		width: 100%;
 	}
 </style>
