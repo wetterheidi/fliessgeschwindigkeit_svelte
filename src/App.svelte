@@ -1,11 +1,14 @@
 <script lang="ts">
+	//import { Utility } from './classes/Utility.class';
+
 	let strickler = 0;
 	let gefaelle = 0;
 	let querschnitt = "";
 	let name = "";
 	let age = "";
 	let message = "";
-
+	let breiteOben = 50;
+	let hoehe = 50;
 
 	// Define an array of options for the dropdown
 	let options = ["Option 1", "Option 2", "Option 3"];
@@ -13,6 +16,7 @@
 	// Variable to store the selected value
 	let selectedOption = options[0];
 	let selectedQuerschnitt = "";
+	let selectedBewuchs = "";
 	let flaeche = 0;
 	let umfang = 0;
 	let geschwindigkeitms = 0;
@@ -77,7 +81,7 @@
 		//Fehlermeldung
 		console.log("Error");
 	}
-	$: selectedBewuchs = bewuechse[0];
+	//$: selectedBewuchs = bewuechse[0];
 
 	$: {
 		if (selectedKategory === "Bach") {
@@ -125,6 +129,10 @@
 				case 4: strickler = 50; break;
 				case 5: strickler = 35; break;
 			}
+		} else {
+			strickler = 0;
+			//Fehlermeldung
+			console.log("Error");
 		}
 	}
 
@@ -202,7 +210,7 @@
 		
         //dann ausrechnen!
 		if (selectedQuerschnitt === "Rechteck") {
-			//Tu was in Rechteck steht
+			//Utility.rechteck(breiteOben, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
 			//Tu was in Gleichschenkliges Trapez steht
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
@@ -263,6 +271,8 @@
 		</select>
 	</div>
 
+	<hr />
+
 	{#if imageSrc}
 		<div class="image-input-group">
 			<img src={imageSrc} alt="Querschnitt Bild" />
@@ -270,7 +280,7 @@
 				{#if breiteVisible}
 					<div class="form-group">
 						<label for="breite">b</label>
-						<input id="breite" type="number" placeholder="50" />
+						<input id="breite" type="number" bind:value={breiteOben} placeholder="50" />
 						<label for="breite">m</label>
 					</div>
 				{/if}
@@ -278,7 +288,7 @@
 				{#if hoeheVisible}
 					<div class="form-group">
 						<label for="hoehe">h</label>
-						<input id="hoehe" type="number" placeholder="50" />
+						<input id="hoehe" type="number" bind:value={hoehe} placeholder="50" />
 						<label for="hoehe">m</label>
 					</div>
 				{/if}
@@ -301,7 +311,7 @@
 
 				{#if xVisible}
 					<div class="form-group">
-						<label for="x">h</label>
+						<label for="x">x</label>
 						<input id="x" type="number" placeholder="50" />
 						<label for="x">m</label>
 					</div>
@@ -309,6 +319,8 @@
 			</div>
 		</div>
 	{/if}
+
+	<hr />
 
 	<div class="form-group">
 		<label for="flaeche">Querschnittsfläche</label>
@@ -407,13 +419,25 @@
 	}
 
 	.input-fields {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 		margin-left: 1rem;
 	}
 
 	.input-fields .form-group {
-		margin-bottom: 0.2rem;
 		display: flex;
-		justify-content: center;
+		align-items: center;
+		margin-bottom: 0.2rem;
+		width: 100%;
+	}
+
+	.input-fields .form-group label {
+		width: 50px;
+	}
+
+	.input-fields .form-group input {
+		flex: 1;
 	}
 
 	img {
