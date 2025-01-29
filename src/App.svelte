@@ -322,63 +322,65 @@
 
 	<hr />
 
-	<table class="form-table">
-		<tr>
-			<td>
-				<label for="flaeche">Querschnittsfläche</label>
-			</td>
-			<td>
-				<input id="flaeche" type="integer" bind:value={flaeche} placeholder="1" />
-			</td>
-			<td>
-				<label for="">m<sup>2</sup></label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="umfang">Benetzter Umfang</label>
-			</td>
-			<td>
-				<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
-			</td>
-			<td>
-				<label for="">m</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="geschwindigkeit">Geschwindigkeit</label>
-			</td>
-			<td>
-				<input id="geschwindigkeitms" type="integer" bind:value={geschwindigkeitms} placeholder="1" />
-			</td>
-			<td>
-				<label for=""> m/s</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="geschwindigkeitkt">Geschwindigkeit</label>
-			</td>
-			<td>
-				<input id="geschwindigkeitkt" type="integer" bind:value={geschwindigkeitkt} placeholder="1" />
-			</td>
-			<td>
-				<label for="">kt</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="durchfluss">Durchfluss</label>
-			</td>
-			<td>
-				<input id="durchfluss" type="integer" bind:value={durchfluss} placeholder="1" />
-			</td>
-			<td>
-				<label for=""> m<sup>3</sup>/s</label>
-			</td>
-		</tr>
-	</table>
+	<div class="table-container">
+		<table class="form-table">
+			<tr>
+				<td>
+					<label for="flaeche">Querschnittsfläche</label>
+				</td>
+				<td>
+					<input id="flaeche" type="integer" bind:value={flaeche} placeholder="1" />
+				</td>
+				<td>
+					<label for="">m<sup>2</sup></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="umfang">Benetzter Umfang</label>
+				</td>
+				<td>
+					<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
+				</td>
+				<td>
+					<label for="">m</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="geschwindigkeit">Geschwindigkeit</label>
+				</td>
+				<td>
+					<input id="geschwindigkeitms" type="integer" bind:value={geschwindigkeitms} placeholder="1" />
+				</td>
+				<td>
+					<label for=""> m/s</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="geschwindigkeitkt">Geschwindigkeit</label>
+				</td>
+				<td>
+					<input id="geschwindigkeitkt" type="integer" bind:value={geschwindigkeitkt} placeholder="1" />
+				</td>
+				<td>
+					<label for="">kt</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="durchfluss">Durchfluss</label>
+				</td>
+				<td>
+					<input id="durchfluss" type="integer" bind:value={durchfluss} placeholder="1" />
+				</td>
+				<td>
+					<label for=""> m<sup>3</sup>/s</label>
+				</td>
+			</tr>
+		</table>
+	</div>
 
 	<hr />
 
@@ -405,6 +407,7 @@
 		align-items: center;
 		justify-content: center;
 		margin-bottom: 1rem;
+		padding: 0.2rem;
 	}
 
 	div {
@@ -417,7 +420,7 @@
 	}
 
 	input {
-		padding: 0.5rem;
+		padding: 0.2rem;
 		font-size: 1rem;
 	}
 
@@ -472,10 +475,15 @@
 		width: 8ch;
 	}
 
+	.table-container {
+		display: flex;
+		justify-content: center;
+	}
+
 	.form-table {
-		width: 100%;
+		width: flex;
 		border-collapse: collapse;
-		margin-bottom: 1rem;
+		margin-bottom: 0.2rem;
 	}
 
 	.form-table td {
@@ -490,6 +498,6 @@
 	.form-table input {
 		padding: 0.2rem;
 		font-size: 1rem;
-		width: 100%;
+		width: 8ch;
 	}
 </style>
