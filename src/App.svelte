@@ -1,10 +1,13 @@
 <script>
+	let strickler = 0;
+	let gefaelle = 0;
+	let querschnitt = "";
 	let name = "";
 	let age = "";
 	let message = "";
 
-	function handleSubmit() {
-		message = `Hello ${name}, you are ${age} years old.`;
+	function handleBerechnen() {
+		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
 	}
 
 	// Define an array of options for the dropdown
@@ -12,33 +15,140 @@
 
 	// Variable to store the selected value
 	let selectedOption = options[0];
+	let selectedQuerschnitt = "";
+	let flaeche = 0;
+	let umfang = 0;
+	let geschwindigkeitms = 0;
+	let geschwindigkeitkt = 0;
+	let durchfluss = 0;
 
 	//Kategorien des Fliessgewässers festlegen
 	let kategories = ["Bach", "Fluss", "Kanal", "Sonstige Fläche"];
 	let selectedKategory = kategories[1];
 
 	//Bewuchs definieren
-	let bewuechse = [];
-	if (selectedKategory === "Bach") {
-		bewuechse = ["mäßiger Uferbewuchs", "üppiger Uferbewuchs", "verwachsen (Sträucher/Bäume)", "mit großen Steinen","mit großen bewegten Steinen","Waldgraben; wenig Bewuchs","Betongerinne; neu/glatt","Betongerinne; alt/rau","Holzrinne","Gerinne; gepflastert","teils gepflastert, teils Wiese","naturnahe Sole; Ufermauern"];
+	$: bewuechse = [];
+	$: if (selectedKategory === "Bach") {
+		bewuechse = [
+			"mäßiger Uferbewuchs",
+			"üppiger Uferbewuchs",
+			"verwachsen (Sträucher/Bäume)",
+			"mit großen Steinen",
+			"mit großen bewegten Steinen",
+			"Waldgraben; wenig Bewuchs",
+			"Betongerinne; neu/glatt",
+			"Betongerinne; alt/rau",
+			"Holzrinne",
+			"Gerinne; gepflastert",
+			"teils gepflastert, teils Wiese",
+			"naturnahe Sole; Ufermauern",
+		];
 	} else if (selectedKategory === "Fluss") {
-		bewuechse = ["mäßiger Uferbewuchs", "üppiger Uferbewuchs", "verwachsen (Sträucher/Bäume)", "mit großen Steinen","mit großen bewegten Steinen","Waldgraben; wenig Bewuchs","Betongerinne; neu/glatt","Betongerinne; alt/rau","Gerinne; gepflastert","teils gepflastert, teils Wiese","naturnahe Sole; Ufermauern"];
+		bewuechse = [
+			"mäßiger Uferbewuchs",
+			"üppiger Uferbewuchs",
+			"verwachsen (Sträucher/Bäume)",
+			"mit großen Steinen",
+			"mit großen bewegten Steinen",
+			"Waldgraben; wenig Bewuchs",
+			"Betongerinne; neu/glatt",
+			"Betongerinne; alt/rau",
+			"Gerinne; gepflastert",
+			"teils gepflastert, teils Wiese",
+			"naturnahe Sole; Ufermauern",
+		];
 	} else if (selectedKategory === "Kanal") {
-		bewuechse = ["Erdkanal; geringer Uferbewuchs", "Erdkanal; üppiger Uferbewuchs","Beton; neu/glatt","Beton; alt/rau","Ziegel","Holz"];
+		bewuechse = [
+			"Erdkanal; geringer Uferbewuchs",
+			"Erdkanal; üppiger Uferbewuchs",
+			"Beton; neu/glatt",
+			"Beton; alt/rau",
+			"Ziegel",
+			"Holz",
+		];
 	} else if (selectedKategory === "Sonstige Fläche") {
-		bewuechse = ["Beton; neu/glatt","Beton; alt/rau","Asphalt","Holz","Erdboden; glatt","Erdboden; rau","Wiese; mittelhoch"];
+		bewuechse = [
+			"Beton; neu/glatt",
+			"Beton; alt/rau",
+			"Asphalt",
+			"Holz",
+			"Erdboden; glatt",
+			"Erdboden; rau",
+			"Wiese; mittelhoch",
+		];
 	} else {
 		//Fehlermeldung
 		console.log("Error");
 	}
+	$: selectedBewuchs = bewuechse[0];
 
-	
-	let selectedBewuchs = bewuechse[0];
+	//Querschnitte definieren
+	let querschnitte = [
+		"Rechteck",
+		"Gleichschenkliges Trapez",
+		"Allgemeines Trapez",
+		"Rohrsegment",
+		"Benutzerdefiniert",
+	];
+	selectedQuerschnitt = querschnitte[0];
 
+	$: imageSrc = "";
+	$: breiteVisible = false;
+	$: hoeheVisible = false;
+	$: breiteobenVisible = false;
+	$: breiteuntenVisible = false;
+	$: xVisible = false;
+
+	$: if (selectedQuerschnitt === "Rechteck") {
+		imageSrc = "/Rechteck_Ausschnitt.png";
+		breiteVisible = true;
+		hoeheVisible = true;
+		breiteobenVisible = false;
+		breiteuntenVisible = false;
+		xVisible = false;
+	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
+		imageSrc = "/GleichschenkligesTrapez_Ausschnitt.png";
+		breiteVisible = false;
+		hoeheVisible = true;
+		breiteobenVisible = true;
+		breiteuntenVisible = true;
+		xVisible = false;
+	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
+		imageSrc = "/AllgemeinesTrapez_Ausschnitt.png";
+		breiteVisible = false;
+		hoeheVisible = true;
+		breiteobenVisible = true;
+		breiteuntenVisible = true;
+		xVisible = true;
+	} else if (selectedQuerschnitt === "Rohrsegment") {
+		imageSrc = "/Rohrsegement_Ausschnitt.png";
+		breiteVisible = false;
+		hoeheVisible = true;
+		breiteobenVisible = true;
+		breiteuntenVisible = false;
+		xVisible = false;
+	} else if (selectedQuerschnitt === "Benutzerdefiniert") {
+		imageSrc = "/Benutzerdefiniert.png";
+		breiteVisible = false;
+		hoeheVisible = false;
+		breiteobenVisible = false;
+		breiteuntenVisible = false;
+		xVisible = false;
+	} else {
+		imageSrc = "";
+		breiteVisible = false;
+		hoeheVisible = false;
+		breiteobenVisible = false;
+		breiteuntenVisible = false;
+		xVisible = false;
+	}
 </script>
 
 <main>
-	<h1>Berechnung der Fliessgeschwindigkeit</h1>
+	<div class="form-group">
+		<img src="/GeoInfoSim.png" alt="Logo" />
+		<h1>Berechnung der Fliessgeschwindigkeit</h1>
+	</div>
 
 	<div class="form-group">
 		<label for="cmbkategorie">Kategorie</label>
@@ -53,27 +163,121 @@
 			{/each}
 		</select>
 	</div>
-	<div>
-		<label for="name">Name:</label>
+	<div class="form-group">
+		<label for="strickler">Stricklerindex</label>
 		<input
-			id="name"
-			type="text"
-			bind:value={name}
-			placeholder="Enter your name"
+			id="strickler"
+			type="integer"
+			bind:value={strickler}
+			placeholder="35"
 		/>
+		<label for="gefaelle">Gefälle</label>
+		<input
+			id="gefaelle"
+			type="integer"
+			bind:value={gefaelle}
+			placeholder="1"
+		/>
+		<label for="prozent">%</label>
 	</div>
 
-	<div>
-		<label for="age">Age:</label>
-		<input
-			id="age"
-			type="number"
-			bind:value={age}
-			placeholder="Enter your age"
-		/>
+	<div class="form-group">
+		<label for="querschnitt">Flußquerschnitt</label>
+		<select id="cmbquerschnitt" bind:value={selectedQuerschnitt}>
+			{#each querschnitte as querschnitt}
+				<option value={querschnitt}>{querschnitt}</option>
+			{/each}
+		</select>
 	</div>
 
-	<button on:click={handleSubmit}>Submit</button>
+	{#if imageSrc}
+		<img src={imageSrc} alt="Querschnitt Bild" />
+	{/if}
+
+	{#if breiteVisible}
+		<div class="form-group">
+			<label for="breite">b</label>
+			<input id="breite" type="number" placeholder="50" />
+			<label for="breite">m</label>
+		</div>
+	{/if}
+
+	{#if hoeheVisible}
+		<div class="form-group">
+			<label for="hoehe">h</label>
+			<input id="hoehe" type="number" placeholder="50" />
+			<label for="hoehe">m</label>
+		</div>
+	{/if}
+
+	{#if breiteobenVisible}
+		<div class="form-group">
+			<label for="breiteoben">b<sub>o</sub></label>
+			<input id="breiteoben" type="number" placeholder="50" />
+			<label for="breiteoben">m</label>
+		</div>
+	{/if}
+
+	{#if breiteuntenVisible}
+		<div class="form-group">
+			<label for="breiteunten">b<sub>u</sub></label>
+			<input id="breiteunten" type="number" placeholder="50" />
+			<label for="breiteunten">m</label>
+		</div>
+	{/if}
+
+	{#if xVisible}
+		<div class="form-group">
+			<label for="x">h</label>
+			<input id="x" type="number" placeholder="50" />
+			<label for="x">m</label>
+		</div>
+	{/if}
+
+
+	<div class="form-group">
+		<label for="flaeche">Querschnittsfläche</label>
+		<input
+			id="flaeche"
+			type="integer"
+			bind:value={flaeche}
+			placeholder="1"
+		/>
+		<label for="">m<sup>2</sup></label>
+	</div>
+	<div class="form-group">
+		<label for="umfang">Benetzter Umfang</label>
+		<input id="umfang" type="integer" bind:value={umfang} placeholder="1" />
+		<label for="">m</label>
+	</div>
+	<div class="form-group">
+		<label for="geschwindigkeit">Geschwindigkeit</label>
+		<input
+			id="geschwindigkeitms"
+			type="integer"
+			bind:value={geschwindigkeitms}
+			placeholder="1"
+		/>
+		<label for=""> m/s</label>
+		<input
+			id="geschwindigkeitkt"
+			type="integer"
+			bind:value={geschwindigkeitkt}
+			placeholder="1"
+		/>
+		<label for="">kt</label>
+	</div>
+	<div class="form-group">
+		<label for="durchfluss">Durchfluss</label>
+		<input
+			id="durchfluss"
+			type="integer"
+			bind:value={durchfluss}
+			placeholder="1"
+		/>
+		<label for=""> m<sup>3</sup>/s</label>
+	</div>
+	<button on:click={handleBerechnen}>Berechnen</button>
 
 	{#if message}
 		<p>{message}</p>
@@ -91,13 +295,6 @@
 	</div>
 
 	<p>Selected option: {selectedOption}</p>
-
-	<h1>Willkommen zu meinem Svelte Bild</h1>
-
-	<!-- Bild einbinden -->
-	<img src="/GeoInfoSim.png" alt="Logo" />
-
-	<p>Dies ist ein Beispiel dafür, wie man ein Bild in Svelte einbindet.</p>
 </main>
 
 <style>
@@ -109,11 +306,11 @@
 	}
 
 	.form-group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
 
 	div {
 		margin-bottom: 1rem;
