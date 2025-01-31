@@ -1,5 +1,4 @@
 <script lang="ts">
-	//import { Utility } from './classes/Utility.class';
 
 	let strickler = 0;
 	let gefaelle = 0;
@@ -86,48 +85,114 @@
 	$: {
 		if (selectedKategory === "Bach") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
-				case 0: strickler = 30; break;
-				case 1: strickler = 22.5; break;
-				case 2: strickler = 15; break;
-				case 3: strickler = 22.5; break;
-				case 4: strickler = 15; break;
-				case 5: strickler = 30; break;
-				case 6: strickler = 90; break;
-				case 7: strickler = 60; break;
-				case 8: strickler = 75; break;
-				case 9: strickler = 50; break;
-				case 10: strickler = 40; break;
-				case 11: strickler = 40; break;
+				case 0:
+					strickler = 30;
+					break;
+				case 1:
+					strickler = 22.5;
+					break;
+				case 2:
+					strickler = 15;
+					break;
+				case 3:
+					strickler = 22.5;
+					break;
+				case 4:
+					strickler = 15;
+					break;
+				case 5:
+					strickler = 30;
+					break;
+				case 6:
+					strickler = 90;
+					break;
+				case 7:
+					strickler = 60;
+					break;
+				case 8:
+					strickler = 75;
+					break;
+				case 9:
+					strickler = 50;
+					break;
+				case 10:
+					strickler = 40;
+					break;
+				case 11:
+					strickler = 40;
+					break;
 			}
 		} else if (selectedKategory === "Fluss") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
-				case 0: strickler = 35; break;
-				case 1: strickler = 30; break;
-				case 2: strickler = 25; break;
-				case 3: strickler = 20; break;
-				case 4: strickler = 90; break;
-				case 5: strickler = 60; break;
-				case 6: strickler = 50; break;
-				case 7: strickler = 40; break;
-				case 8: strickler = 40; break;
+				case 0:
+					strickler = 35;
+					break;
+				case 1:
+					strickler = 30;
+					break;
+				case 2:
+					strickler = 25;
+					break;
+				case 3:
+					strickler = 20;
+					break;
+				case 4:
+					strickler = 90;
+					break;
+				case 5:
+					strickler = 60;
+					break;
+				case 6:
+					strickler = 50;
+					break;
+				case 7:
+					strickler = 40;
+					break;
+				case 8:
+					strickler = 40;
+					break;
 			}
 		} else if (selectedKategory === "Kanal") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
-				case 0: strickler = 40; break;
-				case 1: strickler = 30; break;
-				case 2: strickler = 90; break;
-				case 3: strickler = 60; break;
-				case 4: strickler = 70; break;
-				case 5: strickler = 75; break;
+				case 0:
+					strickler = 40;
+					break;
+				case 1:
+					strickler = 30;
+					break;
+				case 2:
+					strickler = 90;
+					break;
+				case 3:
+					strickler = 60;
+					break;
+				case 4:
+					strickler = 70;
+					break;
+				case 5:
+					strickler = 75;
+					break;
 			}
 		} else if (selectedKategory === "Sonstige Fläche") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
-				case 0: strickler = 90; break;
-				case 1: strickler = 60; break;
-				case 2: strickler = 70; break;
-				case 3: strickler = 75; break;
-				case 4: strickler = 50; break;
-				case 5: strickler = 35; break;
+				case 0:
+					strickler = 90;
+					break;
+				case 1:
+					strickler = 60;
+					break;
+				case 2:
+					strickler = 70;
+					break;
+				case 3:
+					strickler = 75;
+					break;
+				case 4:
+					strickler = 50;
+					break;
+				case 5:
+					strickler = 35;
+					break;
 			}
 		} else {
 			strickler = 0;
@@ -197,6 +262,31 @@
 		xVisible = false;
 	}
 
+	function fliessgeschwindigkeit(A, gef, U, kSt) {
+		try {
+			// Hydraulischer Radius
+			const R = A / U;
+
+			// Formel Mittlere Fließgeschwindigkeit nach Gauckler-Manning-Strickler
+			const vMittel = kSt * Math.pow(R, 2 / 3) * Math.sqrt(gef / 100);
+
+			// Durchflussmenge
+			const volMenge = vMittel * A;
+
+			return { vMittel, volMenge };
+		} catch (ex) {
+			console.error(ex.message);
+			throw ex; // Rethrow the exception for further handling
+		}
+	}
+
+	function rechteck(breite, hoehe, gefaelle, strickler) {
+		const querschnittsflaeche = breite * hoehe;
+		const benetzterUmfang = 2 * (breite + hoehe);
+		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche, gefaelle, benetzterUmfang, strickler);
+		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
 	function handleBerechnen() {
 		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
 		if (strickler === 0) {
@@ -207,10 +297,18 @@
 			alert("Erst Gefälle eingeben!");
 			return;
 		}
-		
-        //dann ausrechnen!
+
+		//dann ausrechnen!
 		if (selectedQuerschnitt === "Rechteck") {
-			//Utility.rechteck(breiteOben, hoehe, gefaelle, strickler);
+			const result = rechteck(breiteOben, hoehe, gefaelle, strickler);
+			if (result) {
+				flaeche = result.querschnittsflaeche;
+				umfang = result.benetzterUmfang;
+				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+				geschwindigkeitkt = parseFloat((result.vMittel * 3.6 / 1.852).toFixed(1));
+				durchfluss = parseFloat(result.volMenge.toFixed(1));
+				//alert(`Die Fläche des Rechtecks beträgt: ${result.querschnittsflaeche} m²`);
+			}
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
 			//Tu was in Gleichschenkliges Trapez steht
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
@@ -280,7 +378,12 @@
 				{#if breiteVisible}
 					<div class="form-group">
 						<label for="breite">b</label>
-						<input id="breite" type="number" bind:value={breiteOben} placeholder="50" />
+						<input
+							id="breite"
+							type="number"
+							bind:value={breiteOben}
+							placeholder="50"
+						/>
 						<label for="breite">m</label>
 					</div>
 				{/if}
@@ -288,7 +391,12 @@
 				{#if hoeheVisible}
 					<div class="form-group">
 						<label for="hoehe">h</label>
-						<input id="hoehe" type="number" bind:value={hoehe} placeholder="50" />
+						<input
+							id="hoehe"
+							type="number"
+							bind:value={hoehe}
+							placeholder="50"
+						/>
 						<label for="hoehe">m</label>
 					</div>
 				{/if}
@@ -304,7 +412,11 @@
 				{#if breiteuntenVisible}
 					<div class="form-group">
 						<label for="breiteunten">b<sub>u</sub></label>
-						<input id="breiteunten" type="number" placeholder="50" />
+						<input
+							id="breiteunten"
+							type="number"
+							placeholder="50"
+						/>
 						<label for="breiteunten">m</label>
 					</div>
 				{/if}
@@ -329,7 +441,12 @@
 					<label for="flaeche">Querschnittsfläche</label>
 				</td>
 				<td>
-					<input id="flaeche" type="integer" bind:value={flaeche} placeholder="1" />
+					<input
+						id="flaeche"
+						type="integer"
+						bind:value={flaeche}
+						placeholder="1"
+					/>
 				</td>
 				<td>
 					<label for="">m<sup>2</sup></label>
@@ -340,7 +457,13 @@
 					<label for="umfang">Benetzter Umfang</label>
 				</td>
 				<td>
-					<input id="umfang" type="integer" bind:value={umfang} placeholder="1" size="5" />
+					<input
+						id="umfang"
+						type="integer"
+						bind:value={umfang}
+						placeholder="1"
+						size="5"
+					/>
 				</td>
 				<td>
 					<label for="">m</label>
@@ -351,7 +474,12 @@
 					<label for="geschwindigkeit">Geschwindigkeit</label>
 				</td>
 				<td>
-					<input id="geschwindigkeitms" type="integer" bind:value={geschwindigkeitms} placeholder="1" />
+					<input
+						id="geschwindigkeitms"
+						type="integer"
+						bind:value={geschwindigkeitms}
+						placeholder="1"
+					/>
 				</td>
 				<td>
 					<label for=""> m/s</label>
@@ -362,7 +490,12 @@
 					<label for="geschwindigkeitkt">Geschwindigkeit</label>
 				</td>
 				<td>
-					<input id="geschwindigkeitkt" type="integer" bind:value={geschwindigkeitkt} placeholder="1" />
+					<input
+						id="geschwindigkeitkt"
+						type="integer"
+						bind:value={geschwindigkeitkt}
+						placeholder="1"
+					/>
 				</td>
 				<td>
 					<label for="">kt</label>
@@ -373,7 +506,12 @@
 					<label for="durchfluss">Durchfluss</label>
 				</td>
 				<td>
-					<input id="durchfluss" type="integer" bind:value={durchfluss} placeholder="1" />
+					<input
+						id="durchfluss"
+						type="integer"
+						bind:value={durchfluss}
+						placeholder="1"
+					/>
 				</td>
 				<td>
 					<label for=""> m<sup>3</sup>/s</label>
@@ -383,7 +521,6 @@
 	</div>
 
 	<hr />
-
 
 	<button on:click={handleBerechnen}>Berechnen</button>
 
@@ -438,6 +575,7 @@
 	.image-input-group {
 		display: flex;
 		align-items: center;
+		margin-left: 20%;
 	}
 
 	.input-fields {
