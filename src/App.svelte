@@ -3,6 +3,7 @@
 	let gefaelle = 0;
 	let message = "";
 	let breiteOben = 50;
+	let breiteUnten = 50; 
 	let hoehe = 50;
 	let xWert = 0; // Declare xWert
 	let querschnittEingabe = 50; // Declare querschnittEingabe
@@ -313,7 +314,7 @@
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
 		const benetzterUmfang =
 			breiteUnten +
-			2 * (hoehe ^ (2 + (breiteOben - breiteUnten) / 2) ^ 2 ^ (1 / 2));
+			2 * (hoehe ^ (2 + Math.abs(breiteOben - breiteUnten) / 2) ^ 2 ^ (1 / 2));
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -334,7 +335,7 @@
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
 		const benetzterUmfang =
 			(breiteUnten +
-				(hoehe ^ (2 + (breiteOben - breiteUnten - xWert)) ^ 2)) ^
+				(hoehe ^ (2 + Math.abs(breiteOben - breiteUnten - xWert)) ^ 2)) ^
 			(1 / 2 + (hoehe ^ (2 + xWert) ^ 2)) ^
 			(1 / 2);
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
@@ -388,7 +389,7 @@
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
 			const result = gleichschenkligesTrapez(
 				breiteOben,
-				breiteOben,
+				breiteUnten,
 				hoehe,
 				gefaelle,
 				strickler,
@@ -405,7 +406,7 @@
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
 			const result = allgemeinesTrapez(
 				breiteOben,
-				breiteOben,
+				breiteUnten,
 				xWert,
 				hoehe,
 				gefaelle,
@@ -450,7 +451,7 @@
 
 <main>
 	<div class="form-group">
-		<img src="/GeoInfoSim.png" alt="Logo" />
+		<img src="/GeoInfoSim.png" alt="Logo" style="width: 200px; height: 200px;" />
 		<h1>Berechnung der Fliessgeschwindigkeit</h1>
 	</div>
 
@@ -527,7 +528,7 @@
 				{#if breiteobenVisible}
 					<div class="form-group">
 						<label for="breiteoben">b<sub>o</sub></label>
-						<input id="breiteoben" type="number" placeholder="50" />
+						<input id="breiteoben" type="number" bind:value={breiteOben} placeholder="50" />
 						<label for="breiteoben">m</label>
 					</div>
 				{/if}
@@ -538,6 +539,7 @@
 						<input
 							id="breiteunten"
 							type="number"
+							bind:value={breiteUnten}
 							placeholder="50"
 						/>
 						<label for="breiteunten">m</label>
@@ -547,7 +549,7 @@
 				{#if xVisible}
 					<div class="form-group">
 						<label for="x">x</label>
-						<input id="x" type="number" placeholder="50" />
+						<input id="x" type="number" bind:value={xWert} placeholder="50" />
 						<label for="x">m</label>
 					</div>
 				{/if}
@@ -667,12 +669,14 @@
 
 	label {
 		margin-right: 0.5rem;
-		margin-left: 0.5rem;
+		font-size: 1rem;
 	}
 
 	input {
 		padding: 0.2rem;
 		font-size: 1rem;
+		margin-right: 0.5rem;
+		margin-left: 0.5rem;
 	}
 
 	button {
@@ -735,7 +739,7 @@
 		border: 1px solid black; /* Add border to the table */
 	}
 
-	.form-table td, .form-table th {
+	.form-table td {
 		padding: 0.2rem;
 		border: 1px solid black; /* Add border to table cells */
 	}
