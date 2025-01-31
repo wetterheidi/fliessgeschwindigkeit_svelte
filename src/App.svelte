@@ -1,9 +1,6 @@
 <script lang="ts">
 	let strickler = 0;
 	let gefaelle = 0;
-	let querschnitt = "";
-	let name = "";
-	let age = "";
 	let message = "";
 	let breiteOben = 50;
 	let hoehe = 50;
@@ -366,7 +363,6 @@
 	}
 
 	function handleBerechnen() {
-		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
 		if (strickler === 0) {
 			alert("Erst Stricklerbeiwert eingeben!");
 			return;
@@ -498,8 +494,6 @@
 		</select>
 	</div>
 
-	<hr />
-
 	{#if imageSrc}
 		<div class="image-input-group">
 			<img src={imageSrc} alt="Querschnitt Bild" />
@@ -579,6 +573,10 @@
 
 	<hr />
 
+	<button on:click={handleBerechnen}>Berechnen</button>
+
+	<hr />
+<h2>Ergebnisse</h2>
 	<div class="table-container">
 		<table class="form-table">
 			<tr>
@@ -586,12 +584,7 @@
 					<label for="flaeche">Querschnittsfläche</label>
 				</td>
 				<td>
-					<input
-						id="flaeche"
-						type="integer"
-						bind:value={flaeche}
-						placeholder="1"
-					/>
+					<span id="flaeche">{flaeche}</span>
 				</td>
 				<td>
 					<label for="">m<sup>2</sup></label>
@@ -602,13 +595,7 @@
 					<label for="umfang">Benetzter Umfang</label>
 				</td>
 				<td>
-					<input
-						id="umfang"
-						type="integer"
-						bind:value={umfang}
-						placeholder="1"
-						size="5"
-					/>
+					<span id="umfang">{umfang}</span>
 				</td>
 				<td>
 					<label for="">m</label>
@@ -619,12 +606,7 @@
 					<label for="geschwindigkeit">Geschwindigkeit</label>
 				</td>
 				<td>
-					<input
-						id="geschwindigkeitms"
-						type="integer"
-						bind:value={geschwindigkeitms}
-						placeholder="1"
-					/>
+					<span id="geschwindigkeitms">{geschwindigkeitms}</span>
 				</td>
 				<td>
 					<label for=""> m/s</label>
@@ -635,12 +617,7 @@
 					<label for="geschwindigkeitkt">Geschwindigkeit</label>
 				</td>
 				<td>
-					<input
-						id="geschwindigkeitkt"
-						type="integer"
-						bind:value={geschwindigkeitkt}
-						placeholder="1"
-					/>
+					<span id="geschwindigkeitkt">{geschwindigkeitkt}</span>
 				</td>
 				<td>
 					<label for="">kt</label>
@@ -651,12 +628,7 @@
 					<label for="durchfluss">Durchfluss</label>
 				</td>
 				<td>
-					<input
-						id="durchfluss"
-						type="integer"
-						bind:value={durchfluss}
-						placeholder="1"
-					/>
+					<span id="durchfluss">{durchfluss}</span>
 				</td>
 				<td>
 					<label for=""> m<sup>3</sup>/s</label>
@@ -665,15 +637,12 @@
 		</table>
 	</div>
 
-	<hr />
-
-	<button on:click={handleBerechnen}>Berechnen</button>
+	
 
 	{#if message}
 		<p>{message}</p>
 	{/if}
 
-	<p>Selected option: {selectedQuerschnitt}</p>
 </main>
 
 <style>
@@ -750,10 +719,6 @@
 		height: 100px;
 	}
 
-	input[type="integer"] {
-		width: 8ch;
-	}
-
 	input[type="number"] {
 		width: 8ch;
 	}
@@ -767,10 +732,12 @@
 		width: flex;
 		border-collapse: collapse;
 		margin-bottom: 0.2rem;
+		border: 1px solid black; /* Add border to the table */
 	}
 
-	.form-table td {
+	.form-table td, .form-table th {
 		padding: 0.2rem;
+		border: 1px solid black; /* Add border to table cells */
 	}
 
 	.form-table label {
@@ -778,9 +745,4 @@
 		margin-left: 0.5rem;
 	}
 
-	.form-table input {
-		padding: 0.2rem;
-		font-size: 1rem;
-		width: 8ch;
-	}
 </style>
