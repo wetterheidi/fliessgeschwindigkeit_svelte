@@ -8,6 +8,8 @@
 	let breiteOben = 50;
 	let hoehe = 50;
 	let xWert = 0; // Declare xWert
+	let querschnittEingabe = 50; // Declare querschnittEingabe
+	let umfangEingabe = 50; // Declare umfangEingabe
 
 	// Define an array of options for the dropdown
 	let options = ["Option 1", "Option 2", "Option 3"];
@@ -217,6 +219,8 @@
 	$: breiteobenVisible = false;
 	$: breiteuntenVisible = false;
 	$: xVisible = false;
+	$: querschnittEingabeVisible = false;
+	$: umfangEingabeVisible = false;
 
 	$: if (selectedQuerschnitt === "Rechteck") {
 		imageSrc = "/Rechteck_Ausschnitt.png";
@@ -225,6 +229,8 @@
 		breiteobenVisible = false;
 		breiteuntenVisible = false;
 		xVisible = false;
+		querschnittEingabeVisible = false;
+		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
 		imageSrc = "/GleichschenkligesTrapez_Ausschnitt.png";
 		breiteVisible = false;
@@ -232,6 +238,8 @@
 		breiteobenVisible = true;
 		breiteuntenVisible = true;
 		xVisible = false;
+		querschnittEingabeVisible = false;
+		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
 		imageSrc = "/AllgemeinesTrapez_Ausschnitt.png";
 		breiteVisible = false;
@@ -239,6 +247,8 @@
 		breiteobenVisible = true;
 		breiteuntenVisible = true;
 		xVisible = true;
+		querschnittEingabeVisible = false;
+		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Rohrsegment") {
 		imageSrc = "/Rohrsegement_Ausschnitt.png";
 		breiteVisible = false;
@@ -246,6 +256,8 @@
 		breiteobenVisible = true;
 		breiteuntenVisible = false;
 		xVisible = false;
+		querschnittEingabeVisible = false;
+		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Benutzerdefiniert") {
 		imageSrc = "/Benutzerdefiniert.png";
 		breiteVisible = false;
@@ -253,6 +265,8 @@
 		breiteobenVisible = false;
 		breiteuntenVisible = false;
 		xVisible = false;
+		querschnittEingabeVisible = true;
+		umfangEingabeVisible = true;
 	} else {
 		imageSrc = "";
 		breiteVisible = false;
@@ -344,6 +358,13 @@
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
 	}
 
+	function benutzerdefiniert(gefaelle, strickler) {
+		const querschnittsflaeche = querschnittEingabe;
+		const benetzterUmfang = umfangEingabe;
+		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche,gefaelle,benetzterUmfang,strickler);
+		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
 	function handleBerechnen() {
 		message = `Außer das Gefälle hinschreiben ${gefaelle} kann ich noch gar nix!`;
 		if (strickler === 0) {
@@ -415,7 +436,16 @@
 				durchfluss = parseFloat(result.volMenge.toFixed(1));
 			}
 		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-			//Tu was in Benutzerdefiniert steht
+			const result = benutzerdefiniert(gefaelle, strickler);
+			if (result) {
+				flaeche = result.querschnittsflaeche;
+				umfang = parseFloat(result.benetzterUmfang.toFixed(1));
+				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+				geschwindigkeitkt = parseFloat(
+					((result.vMittel * 3.6) / 1.852).toFixed(1),
+				);
+				durchfluss = parseFloat(result.volMenge.toFixed(1));
+			}
 		} else {
 			message = "Fehler!";
 		}
@@ -525,6 +555,22 @@
 						<label for="x">x</label>
 						<input id="x" type="number" placeholder="50" />
 						<label for="x">m</label>
+					</div>
+				{/if}
+
+				{#if querschnittEingabeVisible}
+					<div class="form-group">
+						<label for="querschnittEingabe">Fläche</label>
+						<input id="querschnittEingabe" type="number" placeholder="50" bind:value={querschnittEingabe} />
+						<label for="querschnittEingabe">m<sup>2</sup></label>
+					</div>
+				{/if}
+
+				{#if umfangEingabeVisible}
+					<div class="form-group">
+						<label for="umfangEingabe">Umfang</label>
+						<input id="umfangEingabe" type="number" placeholder="50" bind:value={umfangEingabe} />
+						<label for="umfangEingabe">m</label>
 					</div>
 				{/if}
 			</div>
