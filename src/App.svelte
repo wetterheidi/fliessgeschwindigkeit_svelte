@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	let strickler = 0;
 	let gefaelle = 0;
 	let querschnitt = "";
@@ -8,6 +7,7 @@
 	let message = "";
 	let breiteOben = 50;
 	let hoehe = 50;
+	let xWert = 0; // Declare xWert
 
 	// Define an array of options for the dropdown
 	let options = ["Option 1", "Option 2", "Option 3"];
@@ -283,7 +283,64 @@
 	function rechteck(breite, hoehe, gefaelle, strickler) {
 		const querschnittsflaeche = breite * hoehe;
 		const benetzterUmfang = 2 * (breite + hoehe);
-		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche, gefaelle, benetzterUmfang, strickler);
+		const { vMittel, volMenge } = fliessgeschwindigkeit(
+			querschnittsflaeche,
+			gefaelle,
+			benetzterUmfang,
+			strickler,
+		);
+		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
+	function gleichschenkligesTrapez(
+		breiteOben,
+		breiteUnten,
+		hoehe,
+		gefaelle,
+		strickler,
+	) {
+		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
+		const benetzterUmfang =
+			breiteUnten +
+			2 * (hoehe ^ (2 + (breiteOben - breiteUnten) / 2) ^ 2 ^ (1 / 2));
+		const { vMittel, volMenge } = fliessgeschwindigkeit(
+			querschnittsflaeche,
+			gefaelle,
+			benetzterUmfang,
+			strickler,
+		);
+		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
+	function allgemeinesTrapez(
+		breiteOben,
+		breiteUnten,
+		xWert,
+		hoehe,
+		gefaelle,
+		strickler,
+	) {
+		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
+		const benetzterUmfang =
+			(breiteUnten +
+				(hoehe ^ (2 + (breiteOben - breiteUnten - xWert)) ^ 2)) ^
+			(1 / 2 + (hoehe ^ (2 + xWert) ^ 2)) ^
+			(1 / 2);
+		const { vMittel, volMenge } = fliessgeschwindigkeit(
+			querschnittsflaeche,
+			gefaelle,
+			benetzterUmfang,
+			strickler,
+		);
+		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
+	function rohrsegment(breite, hoehe, gefaelle, strickler) {
+		const radius = (hoehe / 2 + breiteOben) ^ (2 / (8 * hoehe));
+		const winkel = 2 * Math.asin(breiteOben / (2 * radius));
+		const querschnittsflaeche = (0.5 * radius) ^ (2 * (winkel - Math.sin(winkel)));
+		const benetzterUmfang = winkel * radius;
+		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche,gefaelle,benetzterUmfang,strickler);
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
 	}
 
@@ -305,16 +362,58 @@
 				flaeche = result.querschnittsflaeche;
 				umfang = result.benetzterUmfang;
 				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat((result.vMittel * 3.6 / 1.852).toFixed(1));
+				geschwindigkeitkt = parseFloat(
+					((result.vMittel * 3.6) / 1.852).toFixed(1),
+				);
 				durchfluss = parseFloat(result.volMenge.toFixed(1));
 				//alert(`Die Fläche des Rechtecks beträgt: ${result.querschnittsflaeche} m²`);
 			}
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-			//Tu was in Gleichschenkliges Trapez steht
+			const result = gleichschenkligesTrapez(
+				breiteOben,
+				breiteOben,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
+			if (result) {
+				flaeche = result.querschnittsflaeche;
+				umfang = result.benetzterUmfang;
+				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+				geschwindigkeitkt = parseFloat(
+					((result.vMittel * 3.6) / 1.852).toFixed(1),
+				);
+				durchfluss = parseFloat(result.volMenge.toFixed(1));
+			}
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-			//Tu was in Allgemeines Trapez steht
+			const result = allgemeinesTrapez(
+				breiteOben,
+				breiteOben,
+				xWert,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
+			if (result) {
+				flaeche = result.querschnittsflaeche;
+				umfang = result.benetzterUmfang;
+				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+				geschwindigkeitkt = parseFloat(
+					((result.vMittel * 3.6) / 1.852).toFixed(1),
+				);
+				durchfluss = parseFloat(result.volMenge.toFixed(1));
+			}
 		} else if (selectedQuerschnitt === "Rohrsegment") {
-			//Tu was in Rohrsegment steht
+			const result = rohrsegment(breiteOben, hoehe, gefaelle, strickler);
+			if (result) {
+				flaeche = result.querschnittsflaeche;
+				umfang = parseFloat(result.benetzterUmfang.toFixed(1));
+				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+				geschwindigkeitkt = parseFloat(
+					((result.vMittel * 3.6) / 1.852).toFixed(1),
+				);
+				durchfluss = parseFloat(result.volMenge.toFixed(1));
+			}
 		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
 			//Tu was in Benutzerdefiniert steht
 		} else {
@@ -346,14 +445,14 @@
 		<label for="strickler">Stricklerindex</label>
 		<input
 			id="strickler"
-			type="integer"
+			type="number"
 			bind:value={strickler}
 			placeholder="35"
 		/>
 		<label for="gefaelle">Gefälle</label>
 		<input
 			id="gefaelle"
-			type="integer"
+			type="number"
 			bind:value={gefaelle}
 			placeholder="1"
 		/>
