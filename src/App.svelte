@@ -2,9 +2,9 @@
 	let strickler = 0;
 	let gefaelle = 0;
 	let message = "";
-	let breiteOben = 50;
-	let breiteUnten = 50;
-	let hoehe = 50;
+	let breiteOben = 10;
+	let breiteUnten = 5;
+	let hoehe = 1;
 	let xWert = 0; // Declare xWert
 	let querschnittEingabe = 50; // Declare querschnittEingabe
 	let umfangEingabe = 50; // Declare umfangEingabe
@@ -376,7 +376,7 @@
 			return 0;
 		} else {
 			const gefaelle = (hoehenunterschied**2 / ((laengeFluss ** 2 - hoehenunterschied**2) ** 0.5)) * 100;
-			return gefaelle;
+			return parseFloat(gefaelle.toFixed(2));
 		}
 	}
 
@@ -433,6 +433,7 @@
 	$: {
 		if (gefaelleOption === 'berechnen') {
 			gefaelle = gefaelleRechnen(hoehenunterschied, laengeFluss);
+			gefaelle = parseFloat(gefaelle.toFixed(2));
 		}
 	}
 </script>
@@ -451,7 +452,7 @@
 	<h2>Eingaben</h2>
 
 	<div class="form-group">
-		<label for="cmbkategorie">Kategorie</label>
+		<label for="cmbkategorie"><strong>Kategorie</strong></label>
 		<select id="cmbkategorie" bind:value={selectedKategory}>
 			{#each kategories as kategory}
 				<option value={kategory}>{kategory}</option>
@@ -464,7 +465,7 @@
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="strickler">Stricklerindex</label>
+		<label for="strickler"><strong>Stricklerindex</strong></label>
 		<input
 			id="strickler"
 			type="number"
@@ -473,7 +474,7 @@
 		/>
 	</div>
 	<div class="form-group small-margin">
-		<label for="gefaelle">Gefälle</label>
+		<label for="gefaelle"><strong>Gefälle</strong></label>
 		<label>
 			<input type="radio" name="gefaelleOption" value="eingeben" bind:group={gefaelleOption} />
 			eingeben
@@ -514,7 +515,7 @@
 	{/if}
 
 	<div class="form-group">
-		<label for="querschnitt">Flußquerschnitt</label>
+		<label for="querschnitt"><strong>Flußquerschnitt</strong></label>
 		<select id="cmbquerschnitt" bind:value={selectedQuerschnitt}>
 			{#each querschnitte as querschnitt}
 				<option value={querschnitt}>{querschnitt}</option>
