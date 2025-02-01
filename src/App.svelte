@@ -386,10 +386,8 @@
 		if (hoehenunterschied === 0 || laengeFluss === 0) {
 			return 0;
 		} else {
-			const gefaelle =
-				(hoehenunterschied ** 2 /
-					(laengeFluss ** 2 - hoehenunterschied ** 2) ** 0.5) *
-				100;
+			//const gefaelle =(hoehenunterschied ** 2 /(laengeFluss ** 2 - hoehenunterschied ** 2) ** 0.5) *100;
+			const gefaelle = (hoehenunterschied / laengeFluss) * 100;
 			return parseFloat(gefaelle.toFixed(2));
 		}
 	}
