@@ -375,19 +375,12 @@
 		if (hoehenunterschied === 0 || laengeFluss === 0) {
 			return 0;
 		} else {
-			console.log("Höhenunterschied: " + hoehenunterschied**2);
-			console.log("Flusslänge: " + laengeFluss);
 			const gefaelle = (hoehenunterschied**2 / ((laengeFluss ** 2 - hoehenunterschied**2) ** 0.5)) * 100;
-			console.log("Gefälle: " + gefaelle);
 			return gefaelle;
 		}
 	}
 
 	$: {
-		console.log("umfangEingabe:", umfangEingabe); // Log the value of umfangEingabe
-		console.log("querschnittEingabe:", querschnittEingabe); // Log the value of querschnittEingabe
-		console.log("strickler:", strickler); // Log the value of strickler
-
 		if (strickler === 0 || gefaelle === 0) {
 			flaeche = 0;
 			umfang = 0;
@@ -439,11 +432,7 @@
 
 	$: {
 		if (gefaelleOption === 'berechnen') {
-			console.log(hoehenunterschied);
-			console.log(laengeFluss);
-			
 			gefaelle = gefaelleRechnen(hoehenunterschied, laengeFluss);
-			console.log("Berechnetes Gefälle: " +  gefaelle);
 		}
 	}
 </script>
@@ -485,10 +474,14 @@
 	</div>
 	<div class="form-group small-margin">
 		<label for="gefaelle">Gefälle</label>
-		<select id="gefaelleOption" bind:value={gefaelleOption}>
-			<option value="eingeben">eingeben</option>
-			<option value="berechnen">berechnen</option>
-		</select>
+		<label>
+			<input type="radio" name="gefaelleOption" value="eingeben" bind:group={gefaelleOption} />
+			eingeben
+		</label>
+		<label>
+			<input type="radio" name="gefaelleOption" value="berechnen" bind:group={gefaelleOption} />
+			berechnen
+		</label>
 	</div>
 	{#if gefaelleOption === 'eingeben'}
 		<div class="form-group small-margin">
