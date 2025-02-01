@@ -3,11 +3,14 @@
 	let gefaelle = 0;
 	let message = "";
 	let breiteOben = 50;
-	let breiteUnten = 50; 
+	let breiteUnten = 50;
 	let hoehe = 50;
 	let xWert = 0; // Declare xWert
 	let querschnittEingabe = 50; // Declare querschnittEingabe
 	let umfangEingabe = 50; // Declare umfangEingabe
+	let hoehenunterschied = 0; // Declare hoehenunterschied
+	let laengeFluss = 0; // Declare laengeFluss
+	let gefaelleOption = "eingeben"; // Declare gefaelleOption
 
 	// Define an array of options for the dropdown
 	let options = ["Option 1", "Option 2", "Option 3"];
@@ -56,7 +59,7 @@
 			"Gerinne; gepflastert",
 			"teils gepflastert, teils Wiese",
 			"naturnahe Sole; Ufermauern",
-		]; 
+		];
 	} else if (selectedKategory === "Kanal") {
 		bewuechse = [
 			"Erdkanal; geringer Uferbewuchs",
@@ -292,7 +295,7 @@
 
 	function rechteck(breite, hoehe, gefaelle, strickler) {
 		const querschnittsflaeche = breite * hoehe;
-		const benetzterUmfang = 2 * (breite + hoehe);
+		const benetzterUmfang = (breite + 2 *  hoehe);
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -310,9 +313,7 @@
 		strickler,
 	) {
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
-		const benetzterUmfang =
-			breiteUnten +
-			2 * (hoehe ^ (2 + Math.abs(breiteOben - breiteUnten) / 2) ^ 2 ^ (1 / 2));
+		const benetzterUmfang = breiteUnten + 2 * ((hoehe ** 2 + (Math.abs(breiteOben - breiteUnten) / 2)) ** 2) ** (1 / 2);
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -331,11 +332,9 @@
 		strickler,
 	) {
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
-		const benetzterUmfang =
-			(breiteUnten +
-				(hoehe ^ (2 + Math.abs(breiteOben - breiteUnten - xWert)) ^ 2)) ^
-			(1 / 2 + (hoehe ^ (2 + xWert) ^ 2)) ^
-			(1 / 2);
+		const seite1 = Math.sqrt((breiteOben - breiteUnten- xWert) ** 2 + hoehe ** 2);
+		const seite2 = Math.sqrt(xWert ** 2 + hoehe ** 2);
+		const benetzterUmfang = breiteUnten + seite1 + seite2;
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -346,32 +345,57 @@
 	}
 
 	function rohrsegment(breite, hoehe, gefaelle, strickler) {
-		const radius = (hoehe / 2 + breiteOben) ^ (2 / (8 * hoehe));
+
+		const radius = hoehe / 2 + breiteOben ** 2 / (8 * hoehe);
 		const winkel = 2 * Math.asin(breiteOben / (2 * radius));
-		const querschnittsflaeche = (0.5 * radius) ^ (2 * (winkel - Math.sin(winkel)));
-		const benetzterUmfang = (winkel * radius); 
-		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche,gefaelle,benetzterUmfang,strickler);
+		const querschnittsflaeche = 0.5 * radius ** 2 * (winkel - Math.sin(winkel));
+		const benetzterUmfang = winkel * radius;
+		const { vMittel, volMenge } = fliessgeschwindigkeit(
+			querschnittsflaeche,
+			gefaelle,
+			benetzterUmfang,
+			strickler,
+		);
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
 	}
 
 	function benutzerdefiniert(gefaelle, strickler) {
 		const querschnittsflaeche = querschnittEingabe;
 		const benetzterUmfang = umfangEingabe;
-		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche,gefaelle,benetzterUmfang,strickler);
+		const { vMittel, volMenge } = fliessgeschwindigkeit(
+			querschnittsflaeche,
+			gefaelle,
+			benetzterUmfang,
+			strickler,
+		);
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
+	}
+
+	function gefaelleRechnen(hoehenunterschied, laengeFluss) {
+		if (hoehenunterschied === 0 || laengeFluss === 0) {
+			return 0;
+		} else {
+			console.log("Höhenunterschied: " + hoehenunterschied**2);
+			console.log("Flusslänge: " + laengeFluss);
+			const gefaelle = (hoehenunterschied**2 / ((laengeFluss ** 2 - hoehenunterschied**2) ** 0.5)) * 100;
+			console.log("Gefälle: " + gefaelle);
+			return gefaelle;
+		}
 	}
 
 	$: {
 		console.log("umfangEingabe:", umfangEingabe); // Log the value of umfangEingabe
 		console.log("querschnittEingabe:", querschnittEingabe); // Log the value of querschnittEingabe
 		console.log("strickler:", strickler); // Log the value of strickler
+
 		if (strickler === 0 || gefaelle === 0) {
 			flaeche = 0;
 			umfang = 0;
 			geschwindigkeitms = 0;
 			geschwindigkeitkt = 0;
 			durchfluss = 0;
-			message = "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
+			message =
+				"Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
 		} else {
 			message = "";
 		}
@@ -380,9 +404,22 @@
 		if (selectedQuerschnitt === "Rechteck") {
 			result = rechteck(breiteOben, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-			result = gleichschenkligesTrapez(breiteOben, breiteUnten, hoehe, gefaelle, strickler);
+			result = gleichschenkligesTrapez(
+				breiteOben,
+				breiteUnten,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-			result = allgemeinesTrapez(breiteOben, breiteUnten, xWert, hoehe, gefaelle, strickler);
+			result = allgemeinesTrapez(
+				breiteOben,
+				breiteUnten,
+				xWert,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
 		} else if (selectedQuerschnitt === "Rohrsegment") {
 			result = rohrsegment(breiteOben, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
@@ -390,18 +427,34 @@
 		}
 
 		if (result) {
-			flaeche = result.querschnittsflaeche;
+			flaeche = parseFloat(result.querschnittsflaeche.toFixed(1));
 			umfang = parseFloat(result.benetzterUmfang.toFixed(1));
 			geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-			geschwindigkeitkt = parseFloat(((result.vMittel * 3.6) / 1.852).toFixed(1));
+			geschwindigkeitkt = parseFloat(
+				((result.vMittel * 3.6) / 1.852).toFixed(1),
+			);
 			durchfluss = parseFloat(result.volMenge.toFixed(1));
+		}
+	}
+
+	$: {
+		if (gefaelleOption === 'berechnen') {
+			console.log(hoehenunterschied);
+			console.log(laengeFluss);
+			
+			gefaelle = gefaelleRechnen(hoehenunterschied, laengeFluss);
+			console.log("Berechnetes Gefälle: " +  gefaelle);
 		}
 	}
 </script>
 
 <main>
 	<div class="form-group">
-		<img src="/GeoInfoSim.png" alt="Logo" style="width: 200px; height: 200px;" />
+		<img
+			src="/GeoInfoSim.png"
+			alt="Logo"
+			style="width: 150px; height: 150px;"
+		/>
 		<h1>Berechnung der Fliessgeschwindigkeit</h1>
 	</div>
 
@@ -429,15 +482,43 @@
 			bind:value={strickler}
 			placeholder="35"
 		/>
-		<label for="gefaelle">Gefälle</label>
-		<input
-			id="gefaelle"
-			type="number"
-			bind:value={gefaelle}
-			placeholder="1"
-		/>
-		<label for="prozent">%</label>
 	</div>
+	<div class="form-group small-margin">
+		<label for="gefaelle">Gefälle</label>
+		<select id="gefaelleOption" bind:value={gefaelleOption}>
+			<option value="eingeben">eingeben</option>
+			<option value="berechnen">berechnen</option>
+		</select>
+	</div>
+	{#if gefaelleOption === 'eingeben'}
+		<div class="form-group small-margin">
+			<input
+				id="gefaelle"
+				type="number"
+				bind:value={gefaelle}
+				placeholder="1"
+			/>
+			<label for="prozent">% </label>
+		</div>
+	{:else if gefaelleOption === 'berechnen'}
+		<div class="form-group small-margin">
+			<label for="hoehenunterschied">Höhenunterschied</label>
+			<input
+				id="hoehenunterschied"
+				type="number"
+				bind:value={hoehenunterschied}
+				placeholder="1"
+			/>
+			<label for="meter">m Länge des Flusses</label>
+			<input
+				id="laengeFluss"
+				type="number"
+				bind:value={laengeFluss}
+				placeholder="1"
+			/>
+			<label for="meter">m</label>
+		</div>
+	{/if}
 
 	<div class="form-group">
 		<label for="querschnitt">Flußquerschnitt</label>
@@ -481,7 +562,12 @@
 				{#if breiteobenVisible}
 					<div class="form-group">
 						<label for="breiteoben">b<sub>o</sub></label>
-						<input id="breiteoben" type="number" bind:value={breiteOben} placeholder="50" />
+						<input
+							id="breiteoben"
+							type="number"
+							bind:value={breiteOben}
+							placeholder="50"
+						/>
 						<label for="breiteoben">m</label>
 					</div>
 				{/if}
@@ -502,7 +588,12 @@
 				{#if xVisible}
 					<div class="form-group">
 						<label for="x">x</label>
-						<input id="x" type="number" bind:value={xWert} placeholder="50" />
+						<input
+							id="x"
+							type="number"
+							bind:value={xWert}
+							placeholder="50"
+						/>
 						<label for="x">m</label>
 					</div>
 				{/if}
@@ -510,7 +601,12 @@
 				{#if querschnittEingabeVisible}
 					<div class="form-group">
 						<label for="querschnittEingabe">Fläche</label>
-						<input id="querschnittEingabe" type="number" placeholder="50" bind:value={querschnittEingabe} />
+						<input
+							id="querschnittEingabe"
+							type="number"
+							placeholder="50"
+							bind:value={querschnittEingabe}
+						/>
 						<label for="querschnittEingabe">m<sup>2</sup></label>
 					</div>
 				{/if}
@@ -518,7 +614,12 @@
 				{#if umfangEingabeVisible}
 					<div class="form-group">
 						<label for="umfangEingabe">Umfang</label>
-						<input id="umfangEingabe" type="number" placeholder="50" bind:value={umfangEingabe} />
+						<input
+							id="umfangEingabe"
+							type="number"
+							placeholder="50"
+							bind:value={umfangEingabe}
+						/>
 						<label for="umfangEingabe">m</label>
 					</div>
 				{/if}
@@ -530,9 +631,8 @@
 		<p class="message">{message}</p>
 	{/if}
 
-	
 	<hr />
-<h2>Ergebnisse</h2>
+	<h2>Ergebnisse</h2>
 	<div class="table-container">
 		<table class="form-table">
 			<tr>
@@ -592,8 +692,6 @@
 			</tr>
 		</table>
 	</div>
-
-	
 </main>
 
 <style>
@@ -610,6 +708,10 @@
 		justify-content: center;
 		margin-bottom: 1rem;
 		padding: 0.2rem;
+	}
+
+	.form-group.small-margin {
+		margin-bottom: 0.5rem; /* Reduzierter Abstand */
 	}
 
 	div {
@@ -634,7 +736,7 @@
 	}
 
 	.message {
-		color: red; 
+		color: red;
 	}
 
 	.image-input-group {
@@ -695,5 +797,4 @@
 		margin-right: 0.5rem;
 		margin-left: 0.5rem;
 	}
-
 </style>
