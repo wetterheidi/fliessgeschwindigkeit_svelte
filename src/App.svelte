@@ -56,7 +56,7 @@
 			"Gerinne; gepflastert",
 			"teils gepflastert, teils Wiese",
 			"naturnahe Sole; Ufermauern",
-		];
+		]; 
 	} else if (selectedKategory === "Kanal") {
 		bewuechse = [
 			"Erdkanal; geringer Uferbewuchs",
@@ -80,8 +80,6 @@
 		//Fehlermeldung
 		console.log("Error");
 	}
-	//$: selectedBewuchs = bewuechse[0];
-
 	$: {
 		if (selectedKategory === "Bach") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
@@ -351,7 +349,7 @@
 		const radius = (hoehe / 2 + breiteOben) ^ (2 / (8 * hoehe));
 		const winkel = 2 * Math.asin(breiteOben / (2 * radius));
 		const querschnittsflaeche = (0.5 * radius) ^ (2 * (winkel - Math.sin(winkel)));
-		const benetzterUmfang = winkel * radius;
+		const benetzterUmfang = (winkel * radius); 
 		const { vMittel, volMenge } = fliessgeschwindigkeit(querschnittsflaeche,gefaelle,benetzterUmfang,strickler);
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
 	}
@@ -363,88 +361,39 @@
 		return { querschnittsflaeche, benetzterUmfang, vMittel, volMenge };
 	}
 
-	function handleBerechnen() {
-		if (strickler === 0) {
-			alert("Erst Stricklerbeiwert eingeben!");
-			return;
-		}
-		if (gefaelle === 0) {
-			alert("Erst Gefälle eingeben!");
-			return;
+	$: {
+		console.log("umfangEingabe:", umfangEingabe); // Log the value of umfangEingabe
+		console.log("querschnittEingabe:", querschnittEingabe); // Log the value of querschnittEingabe
+		if (strickler === 0 || gefaelle === 0) {
+			flaeche = 0;
+			umfang = 0;
+			geschwindigkeitms = 0;
+			geschwindigkeitkt = 0;
+			durchfluss = 0;
+			message = "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
+		} else {
+			message = "";
 		}
 
-		//dann ausrechnen!
+		let result;
 		if (selectedQuerschnitt === "Rechteck") {
-			const result = rechteck(breiteOben, hoehe, gefaelle, strickler);
-			if (result) {
-				flaeche = result.querschnittsflaeche;
-				umfang = result.benetzterUmfang;
-				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat(
-					((result.vMittel * 3.6) / 1.852).toFixed(1),
-				);
-				durchfluss = parseFloat(result.volMenge.toFixed(1));
-				//alert(`Die Fläche des Rechtecks beträgt: ${result.querschnittsflaeche} m²`);
-			}
+			result = rechteck(breiteOben, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-			const result = gleichschenkligesTrapez(
-				breiteOben,
-				breiteUnten,
-				hoehe,
-				gefaelle,
-				strickler,
-			);
-			if (result) {
-				flaeche = result.querschnittsflaeche;
-				umfang = result.benetzterUmfang;
-				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat(
-					((result.vMittel * 3.6) / 1.852).toFixed(1),
-				);
-				durchfluss = parseFloat(result.volMenge.toFixed(1));
-			}
+			result = gleichschenkligesTrapez(breiteOben, breiteUnten, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-			const result = allgemeinesTrapez(
-				breiteOben,
-				breiteUnten,
-				xWert,
-				hoehe,
-				gefaelle,
-				strickler,
-			);
-			if (result) {
-				flaeche = result.querschnittsflaeche;
-				umfang = result.benetzterUmfang;
-				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat(
-					((result.vMittel * 3.6) / 1.852).toFixed(1),
-				);
-				durchfluss = parseFloat(result.volMenge.toFixed(1));
-			}
+			result = allgemeinesTrapez(breiteOben, breiteUnten, xWert, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Rohrsegment") {
-			const result = rohrsegment(breiteOben, hoehe, gefaelle, strickler);
-			if (result) {
-				flaeche = result.querschnittsflaeche;
-				umfang = parseFloat(result.benetzterUmfang.toFixed(1));
-				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat(
-					((result.vMittel * 3.6) / 1.852).toFixed(1),
-				);
-				durchfluss = parseFloat(result.volMenge.toFixed(1));
-			}
+			result = rohrsegment(breiteOben, hoehe, gefaelle, strickler);
 		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-			const result = benutzerdefiniert(gefaelle, strickler);
-			if (result) {
-				flaeche = result.querschnittsflaeche;
-				umfang = parseFloat(result.benetzterUmfang.toFixed(1));
-				geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
-				geschwindigkeitkt = parseFloat(
-					((result.vMittel * 3.6) / 1.852).toFixed(1),
-				);
-				durchfluss = parseFloat(result.volMenge.toFixed(1));
-			}
-		} else {
-			message = "Fehler!";
+			result = benutzerdefiniert(gefaelle, strickler);
+		}
+
+		if (result) {
+			flaeche = result.querschnittsflaeche;
+			umfang = parseFloat(result.benetzterUmfang.toFixed(1));
+			geschwindigkeitms = parseFloat(result.vMittel.toFixed(1));
+			geschwindigkeitkt = parseFloat(((result.vMittel * 3.6) / 1.852).toFixed(1));
+			durchfluss = parseFloat(result.volMenge.toFixed(1));
 		}
 	}
 </script>
@@ -454,6 +403,9 @@
 		<img src="/GeoInfoSim.png" alt="Logo" style="width: 200px; height: 200px;" />
 		<h1>Berechnung der Fliessgeschwindigkeit</h1>
 	</div>
+
+	<hr />
+	<h2>Eingaben</h2>
 
 	<div class="form-group">
 		<label for="cmbkategorie">Kategorie</label>
@@ -573,10 +525,11 @@
 		</div>
 	{/if}
 
-	<hr />
+	{#if message}
+		<p class="message">{message}</p>
+	{/if}
 
-	<button on:click={handleBerechnen}>Berechnen</button>
-
+	
 	<hr />
 <h2>Ergebnisse</h2>
 	<div class="table-container">
@@ -640,11 +593,6 @@
 	</div>
 
 	
-
-	{#if message}
-		<p>{message}</p>
-	{/if}
-
 </main>
 
 <style>
@@ -679,15 +627,13 @@
 		margin-left: 0.5rem;
 	}
 
-	button {
-		padding: 0.5rem 1rem;
-		font-size: 1rem;
-		cursor: pointer;
-	}
-
 	p {
 		margin-top: 1rem;
 		font-size: 1.2rem;
+	}
+
+	.message {
+		color: red; 
 	}
 
 	.image-input-group {
