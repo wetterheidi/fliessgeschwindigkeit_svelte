@@ -1,10 +1,11 @@
 <script lang="ts">
-	let strickler = 0;
-	let gefaelle = 0;
+	let strickler = 0; // Declare strickler
+
+	let gefaelle = 0; // Declare gefaelle
 	let message = "";
-	let breiteOben = 10;
-	let breiteUnten = 5;
-	let hoehe = 1;
+	let breiteOben = 10; // Declare breiteOben
+	let breiteUnten = 5; // Declare breiteUnten
+	let hoehe = 1; // Declare hoehe
 	let xWert = 0; // Declare xWert
 	let querschnittEingabe = 50; // Declare querschnittEingabe
 	let umfangEingabe = 50; // Declare umfangEingabe
@@ -12,11 +13,7 @@
 	let laengeFluss = 0; // Declare laengeFluss
 	let gefaelleOption = "eingeben"; // Declare gefaelleOption
 
-	// Define an array of options for the dropdown
-	let options = ["Option 1", "Option 2", "Option 3"];
-
 	// Variable to store the selected value
-	let selectedOption = options[0];
 	let selectedQuerschnitt = "";
 	let selectedBewuchs = "";
 	let flaeche = 0;
@@ -83,6 +80,7 @@
 		//Fehlermeldung
 		console.log("Error");
 	}
+	// Stricklerindizes für die verschiednen Gewässerkategorien zuordnen
 	$: {
 		if (selectedKategory === "Bach") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
@@ -202,7 +200,7 @@
 		}
 	}
 
-	//Querschnitte definieren
+	//Querschnitte definieren und ein-/ausblenden je nach  Bedarf
 	let querschnitte = [
 		"Rechteck",
 		"Gleichschenkliges Trapez",
@@ -276,6 +274,7 @@
 	}
 
 	function fliessgeschwindigkeit(A, gef, U, kSt) {
+		//Fließgeschwindigkeit mit Hilfe der Mannig-Stricklerformel berechnen
 		try {
 			// Hydraulischer Radius
 			const R = A / U;
@@ -294,8 +293,9 @@
 	}
 
 	function rechteck(breite, hoehe, gefaelle, strickler) {
+		//Rechteckquerschnitt, benetzten Umfang berechnen, danach die Fließgeschwindigkeit und Durchflussmenge berechnen
 		const querschnittsflaeche = breite * hoehe;
-		const benetzterUmfang = (breite + 2 *  hoehe);
+		const benetzterUmfang = breite + 2 * hoehe;
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -306,6 +306,7 @@
 	}
 
 	function gleichschenkligesTrapez(
+		//Trapezquerschnitt, benetzten Umfang berechnen, danach die Fließgeschwindigkeit und Durchflussmenge berechnen
 		breiteOben,
 		breiteUnten,
 		hoehe,
@@ -313,7 +314,11 @@
 		strickler,
 	) {
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
-		const benetzterUmfang = breiteUnten + 2 * ((hoehe ** 2 + (Math.abs(breiteOben - breiteUnten) / 2)) ** 2) ** (1 / 2);
+		const benetzterUmfang =
+			breiteUnten +
+			2 *
+				((hoehe ** 2 + Math.abs(breiteOben - breiteUnten) / 2) ** 2) **
+					(1 / 2);
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
 			gefaelle,
@@ -324,6 +329,7 @@
 	}
 
 	function allgemeinesTrapez(
+		//Trapezquerschnitt, benetzten Umfang berechnen, danach die Fließgeschwindigkeit und Durchflussmenge berechnen
 		breiteOben,
 		breiteUnten,
 		xWert,
@@ -332,7 +338,9 @@
 		strickler,
 	) {
 		const querschnittsflaeche = ((breiteOben + breiteUnten) * hoehe) / 2;
-		const seite1 = Math.sqrt((breiteOben - breiteUnten- xWert) ** 2 + hoehe ** 2);
+		const seite1 = Math.sqrt(
+			(breiteOben - breiteUnten - xWert) ** 2 + hoehe ** 2,
+		);
 		const seite2 = Math.sqrt(xWert ** 2 + hoehe ** 2);
 		const benetzterUmfang = breiteUnten + seite1 + seite2;
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
@@ -345,10 +353,11 @@
 	}
 
 	function rohrsegment(breite, hoehe, gefaelle, strickler) {
-
+		//Rohrsegmentquerschnitt, benetzten Umfang berechnen, danach die Fließgeschwindigkeit und Durchflussmenge berechnen
 		const radius = hoehe / 2 + breiteOben ** 2 / (8 * hoehe);
 		const winkel = 2 * Math.asin(breiteOben / (2 * radius));
-		const querschnittsflaeche = 0.5 * radius ** 2 * (winkel - Math.sin(winkel));
+		const querschnittsflaeche =
+			0.5 * radius ** 2 * (winkel - Math.sin(winkel));
 		const benetzterUmfang = winkel * radius;
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
 			querschnittsflaeche,
@@ -360,6 +369,7 @@
 	}
 
 	function benutzerdefiniert(gefaelle, strickler) {
+		//Benutzerdefinierten Querschnitt, benetzten Umfang auslesen, danach die Fließgeschwindigkeit und Durchflussmenge berechnen
 		const querschnittsflaeche = querschnittEingabe;
 		const benetzterUmfang = umfangEingabe;
 		const { vMittel, volMenge } = fliessgeschwindigkeit(
@@ -372,15 +382,20 @@
 	}
 
 	function gefaelleRechnen(hoehenunterschied, laengeFluss) {
+		//Gefälle berechnen
 		if (hoehenunterschied === 0 || laengeFluss === 0) {
 			return 0;
 		} else {
-			const gefaelle = (hoehenunterschied**2 / ((laengeFluss ** 2 - hoehenunterschied**2) ** 0.5)) * 100;
+			const gefaelle =
+				(hoehenunterschied ** 2 /
+					(laengeFluss ** 2 - hoehenunterschied ** 2) ** 0.5) *
+				100;
 			return parseFloat(gefaelle.toFixed(2));
 		}
 	}
 
 	$: {
+		//Ergebnisse bereitstellen und fehlende Eingaben abfangen
 		if (strickler === 0 || gefaelle === 0) {
 			flaeche = 0;
 			umfang = 0;
@@ -431,7 +446,7 @@
 	}
 
 	$: {
-		if (gefaelleOption === 'berechnen') {
+		if (gefaelleOption === "berechnen") {
 			gefaelle = gefaelleRechnen(hoehenunterschied, laengeFluss);
 			gefaelle = parseFloat(gefaelle.toFixed(2));
 		}
@@ -450,6 +465,9 @@
 
 	<hr />
 	<h2>Eingaben</h2>
+	{#if message}
+		<p class="message">{message}</p>
+	{/if}
 
 	<div class="form-group">
 		<label for="cmbkategorie"><strong>Kategorie</strong></label>
@@ -476,15 +494,25 @@
 	<div class="form-group small-margin">
 		<label for="gefaelle"><strong>Gefälle</strong></label>
 		<label>
-			<input type="radio" name="gefaelleOption" value="eingeben" bind:group={gefaelleOption} />
+			<input
+				type="radio"
+				name="gefaelleOption"
+				value="eingeben"
+				bind:group={gefaelleOption}
+			/>
 			eingeben
 		</label>
 		<label>
-			<input type="radio" name="gefaelleOption" value="berechnen" bind:group={gefaelleOption} />
+			<input
+				type="radio"
+				name="gefaelleOption"
+				value="berechnen"
+				bind:group={gefaelleOption}
+			/>
 			berechnen
 		</label>
 	</div>
-	{#if gefaelleOption === 'eingeben'}
+	{#if gefaelleOption === "eingeben"}
 		<div class="form-group small-margin">
 			<input
 				id="gefaelle"
@@ -494,7 +522,7 @@
 			/>
 			<label for="prozent">% </label>
 		</div>
-	{:else if gefaelleOption === 'berechnen'}
+	{:else if gefaelleOption === "berechnen"}
 		<div class="form-group small-margin">
 			<label for="hoehenunterschied">Höhenunterschied</label>
 			<input
@@ -621,10 +649,6 @@
 		</div>
 	{/if}
 
-	{#if message}
-		<p class="message">{message}</p>
-	{/if}
-
 	<hr />
 	<h2>Ergebnisse</h2>
 	<div class="table-container">
@@ -700,7 +724,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin-bottom: 1rem;
+		margin-bottom: 0.2rem;
 		padding: 0.2rem;
 	}
 
