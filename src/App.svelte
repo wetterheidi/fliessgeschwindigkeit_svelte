@@ -84,112 +84,112 @@
 		if (selectedKategory === "Bach") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
 				case 0:
-					strickler = 30;
+					if (strickler === 0) strickler = 30;
 					break;
 				case 1:
-					strickler = 22.5;
+					if (strickler === 0) strickler = 22.5;
 					break;
 				case 2:
-					strickler = 15;
+					if (strickler === 0) strickler = 15;
 					break;
 				case 3:
-					strickler = 22.5;
+					if (strickler === 0) strickler = 22.5;
 					break;
 				case 4:
-					strickler = 15;
+					if (strickler === 0) strickler = 15;
 					break;
 				case 5:
-					strickler = 30;
+					if (strickler === 0) strickler = 30;
 					break;
 				case 6:
-					strickler = 90;
+					if (strickler === 0) strickler = 90;
 					break;
 				case 7:
-					strickler = 60;
+					if (strickler === 0) strickler = 60;
 					break;
 				case 8:
-					strickler = 75;
+					if (strickler === 0) strickler = 75;
 					break;
 				case 9:
-					strickler = 50;
+					if (strickler === 0) strickler = 50;
 					break;
 				case 10:
-					strickler = 40;
+					if (strickler === 0) strickler = 40;
 					break;
 				case 11:
-					strickler = 40;
+					if (strickler === 0) strickler = 40;
 					break;
 			}
 		} else if (selectedKategory === "Fluss") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
 				case 0:
-					strickler = 35;
+					if (strickler === 0) strickler = 35;
 					break;
 				case 1:
-					strickler = 30;
+					if (strickler === 0) strickler = 30;
 					break;
 				case 2:
-					strickler = 25;
+					if (strickler === 0) strickler = 25;
 					break;
 				case 3:
-					strickler = 20;
+					if (strickler === 0) strickler = 20;
 					break;
 				case 4:
-					strickler = 90;
+					if (strickler === 0) strickler = 90;
 					break;
 				case 5:
-					strickler = 60;
+					if (strickler === 0) strickler = 60;
 					break;
 				case 6:
-					strickler = 50;
+					if (strickler === 0) strickler = 50;
 					break;
 				case 7:
-					strickler = 40;
+					if (strickler === 0) strickler = 40;
 					break;
 				case 8:
-					strickler = 40;
+					if (strickler === 0) strickler = 40;
 					break;
 			}
 		} else if (selectedKategory === "Kanal") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
 				case 0:
-					strickler = 40;
+					if (strickler === 0) strickler = 40;
 					break;
 				case 1:
-					strickler = 30;
+					if (strickler === 0) strickler = 30;
 					break;
 				case 2:
-					strickler = 90;
+					if (strickler === 0) strickler = 90;
 					break;
 				case 3:
-					strickler = 60;
+					if (strickler === 0) strickler = 60;
 					break;
 				case 4:
-					strickler = 70;
+					if (strickler === 0) strickler = 70;
 					break;
 				case 5:
-					strickler = 75;
+					if (strickler === 0) strickler = 75;
 					break;
 			}
 		} else if (selectedKategory === "Sonstige Fläche") {
 			switch (bewuechse.indexOf(selectedBewuchs)) {
 				case 0:
-					strickler = 90;
+					if (strickler === 0) strickler = 90;
 					break;
 				case 1:
-					strickler = 60;
+					if (strickler === 0) strickler = 60;
 					break;
 				case 2:
-					strickler = 70;
+					if (strickler === 0) strickler = 70;
 					break;
 				case 3:
-					strickler = 75;
+					if (strickler === 0) strickler = 75;
 					break;
 				case 4:
-					strickler = 50;
+					if (strickler === 0) strickler = 50;
 					break;
 				case 5:
-					strickler = 35;
+					if (strickler === 0) strickler = 35;
 					break;
 			}
 		} else {
@@ -364,6 +364,7 @@
 	$: {
 		console.log("umfangEingabe:", umfangEingabe); // Log the value of umfangEingabe
 		console.log("querschnittEingabe:", querschnittEingabe); // Log the value of querschnittEingabe
+		console.log("strickler:", strickler); // Log the value of strickler
 		if (strickler === 0 || gefaelle === 0) {
 			flaeche = 0;
 			umfang = 0;
