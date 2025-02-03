@@ -29,9 +29,20 @@ jobs:
         
       - name: Build
         run: npm run build
+            if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+               echo "Build failed to create expected output files"
+                exit 1
+           fi
         
       - name: Verify Build Output
         run: |
+          echo "Checking build output..."
+            if [ ! -d "dist" ]; then
+            echo "Error: dist directory not found!"
+             exit 1
+            fi
+            echo "Contents of dist directory:"
+           ls -la dist
           echo "Current directory:"
           pwd
           echo "Directory contents:"
