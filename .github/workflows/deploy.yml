@@ -20,31 +20,19 @@ jobs:
           node-version: 18
           cache: 'npm'
       
-      # Setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
       - name: Install dependencies
-        run: |
-          npm ci
-          npm list # This will show us installed packages
+        run: npm ci
         
-      - name: Build with debug
-        run: |
-          ls -la  # Show directory contents
-          cat package.json  # Show package.json contents
-          npm run build
-        
-      - name: Check build output
-        run: |
-          ls -la build || echo "build directory not found"
-          ls -la dist || echo "dist directory not found"
-          ls -la public || echo "public directory not found"
+      - name: Build
+        run: npm run build
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build # or whatever your build output directory is
+          path: build
 
   deploy:
     environment:
