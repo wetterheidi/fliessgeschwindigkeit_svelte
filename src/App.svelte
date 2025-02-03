@@ -602,6 +602,7 @@
 		max-width: 600px;
 		padding: 1rem;
 		text-align: center;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.form-group {
@@ -610,19 +611,23 @@
 		justify-content: center;
 		margin-bottom: 0.2rem;
 		padding: 0.2rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.form-group.small-margin {
 		margin-bottom: 0.5rem; /* Reduzierter Abstand */
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	div {
 		margin-bottom: 1rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	label {
 		margin-right: 0.5rem;
 		font-size: 1rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	input {
@@ -630,21 +635,25 @@
 		font-size: 1rem;
 		margin-right: 0.5rem;
 		margin-left: 0.5rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	p {
 		margin-top: 1rem;
 		font-size: 1.2rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.message {
 		color: red;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.image-input-group {
 		display: flex;
 		align-items: center;
 		margin-left: 20%;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.input-fields {
@@ -652,6 +661,7 @@
 		flex-direction: column;
 		align-items: flex-start;
 		margin-left: 1rem;
+		font-family: 'Century Gothic', sans-serif;
 	}
 
 	.input-fields .form-group {
