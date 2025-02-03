@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,39 +32,27 @@ jobs:
         run: npm ci
         
       - name: Build
-        run: |
-          npm run build
-          if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
-            echo "Build failed to create expected output files"
-            exit 1
-          fi
+        run: npm run build
+        env:
+          NODE_ENV: production
         
-      - name: Verify Build Output
+      - name: List build output
         run: |
-          echo "Checking build output..."
-          if [ ! -d "dist" ]; then
-            echo "Error: dist directory not found!"
-            exit 1
-          fi
-          echo "Contents of dist directory:"
-          ls -la dist
-          echo "Current directory:"
-          pwd
-          echo "Directory contents:"
-          ls -la
-          
-      - name: Upload Pages Artifact
+          echo "Build output contents:"
+          ls -la dist/
+        
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
-          retention-days: 1
+          path: ./dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
