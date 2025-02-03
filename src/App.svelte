@@ -1,8 +1,7 @@
 <script>
-	import { FlowCalculator } from './classes/FlowCalculator.class';
+	import { FlowCalculator } from "./classes/FlowCalculator.class";
 
 	let strickler = 0; // Declare strickler
-
 
 	let gefaelle = 0; // Declare gefaelle
 	let message = "";
@@ -232,7 +231,8 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-		imageSrc = "/fliessgeschwindigkeit_svelte/GleichschenkligesTrapez_Ausschnitt.png";
+		imageSrc =
+			"/fliessgeschwindigkeit_svelte/GleichschenkligesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -241,7 +241,8 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-		imageSrc = "/fliessgeschwindigkeit_svelte/AllgemeinesTrapez_Ausschnitt.png";
+		imageSrc =
+			"/fliessgeschwindigkeit_svelte/AllgemeinesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -276,8 +277,6 @@
 		xVisible = false;
 	}
 
-	
-
 	$: {
 		//Ergebnisse bereitstellen und fehlende Eingaben abfangen
 		if (strickler === 0 || gefaelle === 0) {
@@ -294,7 +293,12 @@
 
 		let result;
 		if (selectedQuerschnitt === "Rechteck") {
-			result = FlowCalculator.rechteck(breiteOben, hoehe, gefaelle, strickler);
+			result = FlowCalculator.rechteck(
+				breiteOben,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
 		} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
 			result = FlowCalculator.gleichschenkligesTrapez(
 				breiteOben,
@@ -313,9 +317,19 @@
 				strickler,
 			);
 		} else if (selectedQuerschnitt === "Rohrsegment") {
-			result = FlowCalculator.rohrsegment(breiteOben, hoehe, gefaelle, strickler);
+			result = FlowCalculator.rohrsegment(
+				breiteOben,
+				hoehe,
+				gefaelle,
+				strickler,
+			);
 		} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-			result = FlowCalculator.benutzerdefiniert(gefaelle, strickler, querschnittEingabe, umfangEingabe);
+			result = FlowCalculator.benutzerdefiniert(
+				gefaelle,
+				strickler,
+				querschnittEingabe,
+				umfangEingabe,
+			);
 		}
 
 		if (result) {
@@ -331,8 +345,29 @@
 
 	$: {
 		if (gefaelleOption === "berechnen") {
-			gefaelle = FlowCalculator.gefaelleRechnen(hoehenunterschied, laengeFluss);
+			gefaelle = FlowCalculator.gefaelleRechnen(
+				hoehenunterschied,
+				laengeFluss,
+			);
 			gefaelle = parseFloat(gefaelle.toFixed(2));
+		}
+	}
+	//For downloading the App
+	let deferredPrompt;
+
+	window.addEventListener("beforeinstallprompt", (e) => {
+		e.preventDefault();
+		deferredPrompt = e;
+	});
+
+	async function installApp() {
+		if (deferredPrompt) {
+			deferredPrompt.prompt();
+			const { outcome } = await deferredPrompt.userChoice;
+			if (outcome === "accepted") {
+				console.log("App installed");
+			}
+			deferredPrompt = null;
 		}
 	}
 </script>
@@ -594,75 +629,78 @@
 			</tr>
 		</table>
 	</div>
+	<button on:click={installApp}>Als App installieren</button>
 </main>
 
 <style>
-    main {
-        margin: 0 auto;
-        max-width: 600px;
-        padding: 1rem;
-        text-align: center;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	main {
+		margin: 0 auto;
+		max-width: 600px;
+		padding: 1rem;
+		text-align: center;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    .form-group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 0.2rem;
-        padding: 0.2rem;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	.form-group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.2rem;
+		padding: 0.2rem;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    .form-group.small-margin {
-        margin-bottom: 0.5rem; /* Reduzierter Abstand */
-        font-family: 'Century Gothic', sans-serif;
-    }
+	.form-group.small-margin {
+		margin-bottom: 0.5rem; /* Reduzierter Abstand */
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    div {
-        margin-bottom: 1rem;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	div {
+		margin-bottom: 1rem;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    label {
-        margin-right: 0.5rem;
-        font-size: 1rem;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	label {
+		margin-right: 0.5rem;
+		font-size: 1rem;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    input {
-        padding: 0.2rem;
-        font-size: 1rem;
-        margin-right: 0.5rem;
-        margin-left: 0.5rem;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	input {
+		padding: 0.2rem;
+		font-size: 1rem;
+		margin-right: 0.5rem;
+		margin-left: 0.5rem;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    select {
-        padding: 0.2rem;
-        font-size: 1rem;
-        margin-right: 0.5rem;
-        margin-left: 0.5rem;
-        font-family: 'Century Gothic', sans-serif;
-        height: calc(1.5em + 0.4rem); /* Höhe anpassen, um der Höhe der Textboxen zu entsprechen */
-    }
+	select {
+		padding: 0.2rem;
+		font-size: 1rem;
+		margin-right: 0.5rem;
+		margin-left: 0.5rem;
+		font-family: "Century Gothic", sans-serif;
+		height: calc(
+			1.5em + 0.4rem
+		); /* Höhe anpassen, um der Höhe der Textboxen zu entsprechen */
+	}
 
-    p {
-        margin-top: 1rem;
-        font-size: 1.2rem;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	p {
+		margin-top: 1rem;
+		font-size: 1.2rem;
+		font-family: "Century Gothic", sans-serif;
+	}
 
-    .message {
-        color: red;
-        font-family: 'Century Gothic', sans-serif;
-    }
+	.message {
+		color: red;
+		font-family: "Century Gothic", sans-serif;
+	}
 
 	.image-input-group {
 		display: flex;
 		align-items: center;
 		margin-left: 20%;
-		font-family: 'Century Gothic', sans-serif;
+		font-family: "Century Gothic", sans-serif;
 	}
 
 	.input-fields {
@@ -670,7 +708,7 @@
 		flex-direction: column;
 		align-items: flex-start;
 		margin-left: 1rem;
-		font-family: 'Century Gothic', sans-serif;
+		font-family: "Century Gothic", sans-serif;
 	}
 
 	.input-fields .form-group {
