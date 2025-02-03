@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4    # Updated from v3 to v4
+        uses: actions/upload-pages-artifact@v2    # Using current stable version v2
         with:
           path: ./build
 
@@ -35,4 +35,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4    # Updated from v2 to v4
+        uses: actions/deploy-pages@v3    # Using current stable version v3
