@@ -28,42 +28,28 @@ jobs:
         run: npm ci
         
       - name: Build
-        run: npm run build
-            if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
-               echo "Build failed to create expected output files"
-                exit 1
-           fi
+        run: |
+          npm run build
+          if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+            echo "Build failed to create expected output files"
+            exit 1
+          fi
         
       - name: Verify Build Output
         run: |
           echo "Checking build output..."
-            if [ ! -d "dist" ]; then
+          if [ ! -d "dist" ]; then
             echo "Error: dist directory not found!"
-             exit 1
-            fi
-            echo "Contents of dist directory:"
-           ls -la dist
+            exit 1
+          fi
+          echo "Contents of dist directory:"
+          ls -la dist
           echo "Current directory:"
           pwd
           echo "Directory contents:"
           ls -la
-          echo "Dist directory contents:"
-          ls -la dist || echo "dist directory not found"
-          
-      - name: Prepare Artifact
-        if: success()
-        run: |
-          if [ ! -d "dist" ]; then
-            echo "Creating dist directory..."
-            mkdir -p dist
-          fi
-          if [ ! -f "dist/index.html" ]; then
-            echo "Creating placeholder index.html..."
-            echo "<!DOCTYPE html><html><body>Placeholder</body></html>" > dist/index.html
-          fi
           
       - name: Upload Pages Artifact
-        if: success()
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
