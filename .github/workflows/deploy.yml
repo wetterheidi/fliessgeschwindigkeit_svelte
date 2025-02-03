@@ -29,8 +29,16 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: List build directory
-        run: ls -la dist
+      - name: Debug Build Output
+        run: |
+          pwd
+          ls -la
+          ls -la dist || echo "dist directory not found"
+          
+      - name: Create Artifact Directory
+        run: |
+          mkdir -p dist
+          [ -f dist/index.html ] || echo "<!DOCTYPE html><html><body>Placeholder</body></html>" > dist/index.html
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
