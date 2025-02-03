@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [svelte()],
   base: '/fliessgeschwindigkeit/',
   build: {
-    outDir: 'build'
+    outDir: 'dist',
+    sourcemap: true
   }
 })
