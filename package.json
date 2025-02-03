@@ -4,10 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
-    "build": "svelte-kit build",
-    "deploy": "gh-pages -d build"
+    "start": "sirv public --no-clear"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
@@ -21,6 +20,5 @@
   },
   "dependencies": {
     "sirv-cli": "^2.0.0"
-  },
-  "homepage": "https://wetterheidi.github.io/fliessgeschwindigkeit-svelte"
+  }
 }
