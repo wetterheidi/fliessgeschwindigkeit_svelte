@@ -597,57 +597,66 @@
 </main>
 
 <style>
-	main {
-		margin: 0 auto;
-		max-width: 600px;
-		padding: 1rem;
-		text-align: center;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    main {
+        margin: 0 auto;
+        max-width: 600px;
+        padding: 1rem;
+        text-align: center;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	.form-group {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin-bottom: 0.2rem;
-		padding: 0.2rem;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    .form-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.2rem;
+        padding: 0.2rem;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	.form-group.small-margin {
-		margin-bottom: 0.5rem; /* Reduzierter Abstand */
-		font-family: 'Century Gothic', sans-serif;
-	}
+    .form-group.small-margin {
+        margin-bottom: 0.5rem; /* Reduzierter Abstand */
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	div {
-		margin-bottom: 1rem;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    div {
+        margin-bottom: 1rem;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	label {
-		margin-right: 0.5rem;
-		font-size: 1rem;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    label {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	input {
-		padding: 0.2rem;
-		font-size: 1rem;
-		margin-right: 0.5rem;
-		margin-left: 0.5rem;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    input {
+        padding: 0.2rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
-	p {
-		margin-top: 1rem;
-		font-size: 1.2rem;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    select {
+        padding: 0.2rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        font-family: 'Century Gothic', sans-serif;
+        height: calc(1.5em + 0.4rem); /* Höhe anpassen, um der Höhe der Textboxen zu entsprechen */
+    }
 
-	.message {
-		color: red;
-		font-family: 'Century Gothic', sans-serif;
-	}
+    p {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        font-family: 'Century Gothic', sans-serif;
+    }
+
+    .message {
+        color: red;
+        font-family: 'Century Gothic', sans-serif;
+    }
 
 	.image-input-group {
 		display: flex;
