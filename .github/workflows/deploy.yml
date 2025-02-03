@@ -10,11 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,10 +25,21 @@ jobs:
         uses: actions/configure-pages@v4
         
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm list # This will show us installed packages
         
-      - name: Build
-        run: npm run build
+      - name: Build with debug
+        run: |
+          ls -la  # Show directory contents
+          cat package.json  # Show package.json contents
+          npm run build
+        
+      - name: Check build output
+        run: |
+          ls -la build || echo "build directory not found"
+          ls -la dist || echo "dist directory not found"
+          ls -la public || echo "public directory not found"
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
