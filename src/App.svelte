@@ -223,7 +223,7 @@
 	$: umfangEingabeVisible = false;
 
 	$: if (selectedQuerschnitt === "Rechteck") {
-		imageSrc = "/Rechteck_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/Rechteck_Ausschnitt.png";
 		breiteVisible = true;
 		hoeheVisible = true;
 		breiteobenVisible = false;
@@ -232,7 +232,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-		imageSrc = "/GleichschenkligesTrapez_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/GleichschenkligesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -241,7 +241,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-		imageSrc = "/AllgemeinesTrapez_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/AllgemeinesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -250,7 +250,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Rohrsegment") {
-		imageSrc = "/Rohrsegement_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/Rohrsegement_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -259,7 +259,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-		imageSrc = "/Benutzerdefiniert.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/Benutzerdefiniert.png";
 		breiteVisible = false;
 		hoeheVisible = false;
 		breiteobenVisible = false;
@@ -340,7 +340,7 @@
 <main>
 	<div class="form-group">
 		<img
-			src="/GeoInfoSim.png"
+			src="/fliessgeschwindigkeit_svelte/GeoInfoSim.png"
 			alt="Logo"
 			style="width: 150px; height: 150px;"
 		/>
