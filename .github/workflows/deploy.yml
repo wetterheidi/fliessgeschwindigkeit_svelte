@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -29,28 +30,40 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: Debug Build Output
+      - name: Verify Build Output
         run: |
+          echo "Current directory:"
           pwd
+          echo "Directory contents:"
           ls -la
+          echo "Dist directory contents:"
           ls -la dist || echo "dist directory not found"
           
-      - name: Create Artifact Directory
+      - name: Prepare Artifact
+        if: success()
         run: |
-          mkdir -p dist
-          [ -f dist/index.html ] || echo "<!DOCTYPE html><html><body>Placeholder</body></html>" > dist/index.html
-        
-      - name: Upload artifact
+          if [ ! -d "dist" ]; then
+            echo "Creating dist directory..."
+            mkdir -p dist
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "Creating placeholder index.html..."
+            echo "<!DOCTYPE html><html><body>Placeholder</body></html>" > dist/index.html
+          fi
+          
+      - name: Upload Pages Artifact
+        if: success()
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+          retention-days: 1
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
