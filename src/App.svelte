@@ -354,22 +354,38 @@
 	}
 	//For downloading the App
 	let deferredPrompt;
+let installationStatus = ''; // Neue Variable für Feedback
 
-	window.addEventListener("beforeinstallprompt", (e) => {
-		e.preventDefault();
-		deferredPrompt = e;
-	});
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log("beforeinstallprompt Event empfangen"); // Debug-Log
+});
 
-	async function installApp() {
-		if (deferredPrompt) {
-			deferredPrompt.prompt();
-			const { outcome } = await deferredPrompt.userChoice;
-			if (outcome === "accepted") {
-				console.log("App installed");
-			}
-			deferredPrompt = null;
-		}
-	}
+async function installApp() {
+    console.log("Install-Button geklickt"); // Debug-Log
+    if (deferredPrompt) {
+        console.log("deferredPrompt verfügbar"); // Debug-Log
+        try {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === "accepted") {
+                installationStatus = 'App wurde erfolgreich installiert';
+                console.log("App installiert");
+            } else {
+                installationStatus = 'Installation wurde abgelehnt';
+                console.log("Installation abgelehnt");
+            }
+        } catch (error) {
+            console.error("Installationsfehler:", error);
+            installationStatus = 'Installation fehlgeschlagen';
+        }
+        deferredPrompt = null;
+    } else {
+        console.log("Kein deferredPrompt verfügbar"); // Debug-Log
+        installationStatus = 'App kann nicht installiert werden (bereits installiert oder nicht unterstützt)';
+    }
+}
 </script>
 
 <main>
@@ -630,6 +646,9 @@
 		</table>
 	</div>
 	<button on:click={installApp}>Als App installieren</button>
+    {#if installationStatus}
+        <p class="installation-status">{installationStatus}</p>
+    {/if}
 </main>
 
 <style>
@@ -756,4 +775,10 @@
 		margin-right: 0.5rem;
 		margin-left: 0.5rem;
 	}
+
+	.installation-status {
+        margin-top: 1rem;
+        color: #666;
+        font-style: italic;
+    }
 </style>
