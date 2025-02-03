@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/fliessgeschwindigkeit_svelte/sw.js', { scope: '/fliessgeschwindigkeit_svelte/' })})}
