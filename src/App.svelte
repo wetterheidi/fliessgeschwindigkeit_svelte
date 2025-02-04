@@ -1,5 +1,6 @@
 <script>
 	import { FlowCalculator } from "./classes/FlowCalculator.class";
+    import { onMount } from 'svelte';
 
 	let strickler = 0; // Declare strickler
 
@@ -222,7 +223,7 @@
 	$: umfangEingabeVisible = false;
 
 	$: if (selectedQuerschnitt === "Rechteck") {
-		imageSrc = "/fliessgeschwindigkeit_svelte/Rechteck_Ausschnitt.png";
+		imageSrc = "icons/Rechteck_Ausschnitt.png";
 		breiteVisible = true;
 		hoeheVisible = true;
 		breiteobenVisible = false;
@@ -231,8 +232,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-		imageSrc =
-			"/fliessgeschwindigkeit_svelte/GleichschenkligesTrapez_Ausschnitt.png";
+		imageSrc = "icons/GleichschenkligesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -241,8 +241,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-		imageSrc =
-			"/fliessgeschwindigkeit_svelte/AllgemeinesTrapez_Ausschnitt.png";
+		imageSrc = "icons/AllgemeinesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -251,7 +250,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Rohrsegment") {
-		imageSrc = "/fliessgeschwindigkeit_svelte/Rohrsegement_Ausschnitt.png";
+		imageSrc = "icons/Rohrsegement_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -260,7 +259,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-		imageSrc = "/fliessgeschwindigkeit_svelte/Benutzerdefiniert.png";
+		imageSrc = "icons/Benutzerdefiniert.png";
 		breiteVisible = false;
 		hoeheVisible = false;
 		breiteobenVisible = false;
@@ -354,44 +353,63 @@
 	}
 	//For downloading the App
 	let deferredPrompt;
-let installationStatus = ''; // Neue Variable für Feedback
+	let showInstallButton = false;
+    let installationStatus = "";
 
-window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log("beforeinstallprompt Event empfangen"); // Debug-Log
-});
-
-async function installApp() {
-    console.log("Install-Button geklickt"); // Debug-Log
-    if (deferredPrompt) {
-        console.log("deferredPrompt verfügbar"); // Debug-Log
-        try {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === "accepted") {
-                installationStatus = 'App wurde erfolgreich installiert';
-                console.log("App installiert");
-            } else {
-                installationStatus = 'Installation wurde abgelehnt';
-                console.log("Installation abgelehnt");
-            }
-        } catch (error) {
-            console.error("Installationsfehler:", error);
-            installationStatus = 'Installation fehlgeschlagen';
+    onMount(() => {
+		console.log('Im onMount');
+        // Prüfen ob die App bereits installiert ist
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            showInstallButton = false;
+            installationStatus = "App ist bereits installiert";
+            return;
         }
-        deferredPrompt = null;
-    } else {
-        console.log("Kein deferredPrompt verfügbar"); // Debug-Log
-        installationStatus = 'App kann nicht installiert werden (bereits installiert oder nicht unterstützt)';
-    }
-}
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton = true;
+            console.log('beforeinstallprompt Event empfangen');
+        });
+
+        window.addEventListener('appinstalled', () => {
+            showInstallButton = false;
+            installationStatus = "App wurde erfolgreich installiert";
+            deferredPrompt = null;
+        });
+    });
+
+	async function installApp() {
+		console.log("Install-Button geklickt"); // Debug-Log
+		if (deferredPrompt) {
+			console.log("deferredPrompt verfügbar"); // Debug-Log
+			try {
+				deferredPrompt.prompt();
+				const { outcome } = await deferredPrompt.userChoice;
+				if (outcome === "accepted") {
+					installationStatus = "App wurde erfolgreich installiert";
+					console.log("App installiert");
+				} else {
+					installationStatus = "Installation wurde abgelehnt";
+					console.log("Installation abgelehnt");
+				}
+			} catch (error) {
+				console.error("Installationsfehler:", error);
+				installationStatus = "Installation fehlgeschlagen";
+			}
+			deferredPrompt = null;
+		} else {
+			console.log("Kein deferredPrompt verfügbar"); // Debug-Log
+			installationStatus =
+				"App kann nicht installiert werden (bereits installiert oder nicht unterstützt)";
+		}
+	}
 </script>
 
 <main>
 	<div class="form-group">
 		<img
-			src="/fliessgeschwindigkeit_svelte/GeoInfoSim.png"
+			src="icons/GeoInfoSim.png"
 			alt="Logo"
 			style="width: 150px; height: 150px;"
 		/>
@@ -645,10 +663,12 @@ async function installApp() {
 			</tr>
 		</table>
 	</div>
-	<button on:click={installApp}>Als App installieren</button>
-    {#if installationStatus}
-        <p class="installation-status">{installationStatus}</p>
-    {/if}
+	{#if showInstallButton}
+		<button on:click={installApp}>Als App installieren</button>
+	{/if}
+	{#if installationStatus}
+		<p class="installation-status">{installationStatus}</p>
+	{/if}
 </main>
 
 <style>
@@ -777,8 +797,8 @@ async function installApp() {
 	}
 
 	.installation-status {
-        margin-top: 1rem;
-        color: #666;
-        font-style: italic;
-    }
+		margin-top: 1rem;
+		color: #666;
+		font-style: italic;
+	}
 </style>

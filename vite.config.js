@@ -3,6 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '',
   plugins: [
     svelte(),
     VitePWA({
@@ -10,43 +11,33 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Fliessgeschwindigkeit Rechner',
-        short_name: 'Fliessgeschwindigkeit',
-        description: 'Berechnung der Fliessgeschwindigkeit',
-        theme_color: '#ffffff',
+        short_name: 'Fliessgeschw.',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#000000',
         icons: [
           {
-            src: 'GeoInfoSim.png',
+            src: 'icons/GeoInfoSim.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'GeoInfoSim.png',
+            src: 'icons/GeoInfoSim.png',
             sizes: '512x512',
             type: 'image/png'
           }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/wetterheidi\.github\.io\/fliessgeschwindigkeit_svelte\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'fliessgeschwindigkeit-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
-              }
-            }
-          }
-        ]
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ],
-  base: '/fliessgeschwindigkeit_svelte/',
   build: {
-    outDir: 'dist',
-    sourcemap: true
+    outDir: 'dist'
   }
 })
