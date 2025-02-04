@@ -5,7 +5,9 @@ const app = new App({
 })
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
+  navigator.serviceWorker.register('/fliessgeschwindigkeit_svelte/sw.js', {
+    scope: '/fliessgeschwindigkeit_svelte/'
+  })
     .then((registration) => {
       console.log('Service Worker registriert:', registration);
     })

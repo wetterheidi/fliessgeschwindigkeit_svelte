@@ -3,7 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '',
+  base: '/fliessgeschwindigkeit_svelte/',
   plugins: [
     svelte(),
     VitePWA({
@@ -12,7 +12,8 @@ export default defineConfig({
       manifest: {
         name: 'Fliessgeschwindigkeit Rechner',
         short_name: 'Fliessgeschw.',
-        start_url: '/',
+        start_url: '/fliessgeschwindigkeit_svelte/',
+        scope: '/fliessgeschwindigkeit_svelte/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
@@ -30,7 +31,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        navigateFallback: '/fliessgeschwindigkeit_svelte/index.html'
       },
       devOptions: {
         enabled: true
