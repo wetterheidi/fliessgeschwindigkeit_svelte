@@ -223,7 +223,7 @@
 	$: umfangEingabeVisible = false;
 
 	$: if (selectedQuerschnitt === "Rechteck") {
-		imageSrc = "icons/Rechteck_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/icons/Rechteck_Ausschnitt.png";
 		breiteVisible = true;
 		hoeheVisible = true;
 		breiteobenVisible = false;
@@ -232,7 +232,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-		imageSrc = "icons/GleichschenkligesTrapez_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/icons/GleichschenkligesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -241,7 +241,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Allgemeines Trapez") {
-		imageSrc = "icons/AllgemeinesTrapez_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/icons/AllgemeinesTrapez_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -250,7 +250,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Rohrsegment") {
-		imageSrc = "icons/Rohrsegement_Ausschnitt.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/icons/Rohrsegement_Ausschnitt.png";
 		breiteVisible = false;
 		hoeheVisible = true;
 		breiteobenVisible = true;
@@ -259,7 +259,7 @@
 		querschnittEingabeVisible = false;
 		umfangEingabeVisible = false;
 	} else if (selectedQuerschnitt === "Benutzerdefiniert") {
-		imageSrc = "icons/Benutzerdefiniert.png";
+		imageSrc = "/fliessgeschwindigkeit_svelte/icons/Benutzerdefiniert.png";
 		breiteVisible = false;
 		hoeheVisible = false;
 		breiteobenVisible = false;
@@ -357,22 +357,32 @@
     let installationStatus = "";
 
     onMount(() => {
-		console.log('Im onMount');
+		console.log('Installation-Status beim Start:', {
+            isStandalone: window.matchMedia('(display-mode: standalone)').matches,
+            showInstallButton
+        });
+
         // Prüfen ob die App bereits installiert ist
-        if (window.matchMedia('(display-mode: standalone)').matches) {
+        if ('standalone' in window.navigator || window.matchMedia('(display-mode: standalone)').matches) {
             showInstallButton = false;
             installationStatus = "App ist bereits installiert";
+            console.log('App läuft bereits als Standalone');
             return;
         }
 
+        // Force-show button for testing
+        showInstallButton = true;
+        console.log('Install-Button initial anzeigen');
+
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt Event empfangen');
             e.preventDefault();
             deferredPrompt = e;
             showInstallButton = true;
-            console.log('beforeinstallprompt Event empfangen');
         });
 
         window.addEventListener('appinstalled', () => {
+            console.log('App wurde installiert');
             showInstallButton = false;
             installationStatus = "App wurde erfolgreich installiert";
             deferredPrompt = null;
@@ -380,36 +390,41 @@
     });
 
 	async function installApp() {
-		console.log("Install-Button geklickt"); // Debug-Log
-		if (deferredPrompt) {
-			console.log("deferredPrompt verfügbar"); // Debug-Log
-			try {
-				deferredPrompt.prompt();
-				const { outcome } = await deferredPrompt.userChoice;
-				if (outcome === "accepted") {
-					installationStatus = "App wurde erfolgreich installiert";
-					console.log("App installiert");
-				} else {
-					installationStatus = "Installation wurde abgelehnt";
-					console.log("Installation abgelehnt");
-				}
-			} catch (error) {
-				console.error("Installationsfehler:", error);
-				installationStatus = "Installation fehlgeschlagen";
-			}
-			deferredPrompt = null;
-		} else {
-			console.log("Kein deferredPrompt verfügbar"); // Debug-Log
-			installationStatus =
-				"App kann nicht installiert werden (bereits installiert oder nicht unterstützt)";
-		}
+		console.log('Install-Button geklickt, deferredPrompt:', !!deferredPrompt);
+        
+        if (!deferredPrompt) {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            if (isIOS) {
+                installationStatus = "Bitte nutzen Sie 'Zum Home-Bildschirm hinzufügen' im Safari-Menü";
+            } else {
+                installationStatus = "Installation momentan nicht möglich. Bitte laden Sie die Seite neu.";
+            }
+            return;
+        }
+
+        try {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('Installation outcome:', outcome);
+            
+            if (outcome === "accepted") {
+                installationStatus = "App wurde erfolgreich installiert";
+            } else {
+                installationStatus = "Installation wurde abgelehnt";
+            }
+        } catch (error) {
+            console.error('Installationsfehler:', error);
+            installationStatus = "Installation fehlgeschlagen: " + error.message;
+        }
+        
+        deferredPrompt = null;
 	}
 </script>
 
 <main>
 	<div class="form-group">
 		<img
-			src="icons/GeoInfoSim.png"
+			src="/fliessgeschwindigkeit_svelte/icons/GeoInfoSim.png"
 			alt="Logo"
 			style="width: 150px; height: 150px;"
 		/>

@@ -19,12 +19,12 @@ export default defineConfig({
         theme_color: '#000000',
         icons: [
           {
-            src: 'icons/GeoInfoSim.png',
+            src: '/fliessgeschwindigkeit_svelte/icons/GeoInfoSim.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'icons/GeoInfoSim.png',
+            src: '/fliessgeschwindigkeit_svelte/icons/GeoInfoSim.png',
             sizes: '512x512',
             type: 'image/png'
           }
@@ -32,7 +32,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        navigateFallback: '/fliessgeschwindigkeit_svelte/index.html'
+        navigateFallback: null,
+        navigateFallbackAllowlist: [/^\/fliessgeschwindigkeit_svelte\//]
       },
       devOptions: {
         enabled: true
