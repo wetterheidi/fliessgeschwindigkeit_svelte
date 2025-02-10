@@ -281,7 +281,7 @@
             geschwindigkeitkt = 0;
             durchfluss = 0;
             message =
-                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 8";
+                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
         } else {
             message = "";
         }
@@ -428,6 +428,7 @@
             style="width: 150px; height: 150px;"
         />
         <h1>Berechnung der Fliessgeschwindigkeit</h1>
+        <p>Version 1.0.0</p>
     </div>
 
     <hr />
