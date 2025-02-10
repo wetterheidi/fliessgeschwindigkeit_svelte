@@ -281,7 +281,7 @@
             geschwindigkeitkt = 0;
             durchfluss = 0;
             message =
-                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
+                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 5";
         } else {
             message = "";
         }
