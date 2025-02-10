@@ -421,7 +421,7 @@
     }
 </script>
 
-<main>
+<main> 
     <div class="form-group">
         <img
             src="/fliessgeschwindigkeit_svelte/icons/GeoInfoSim.png"
