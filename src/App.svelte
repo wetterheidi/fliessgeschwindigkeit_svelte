@@ -669,14 +669,16 @@
         </table>
     </div>
     {#if showInstallButton}
+    <div class="install-container">
         <button on:click={installApp}>Als App installieren</button>
-    {/if}
-    <p class="installation-status">
-        Status: {showInstallButton ? 'Button sichtbar' : 'Button versteckt'}
-        {#if installationStatus}
-            - {installationStatus}
-        {/if}
-    </p>
+        <p class="installation-status">
+            Status: {showInstallButton ? 'Button sichtbar' : 'Button versteckt'}
+            {#if installationStatus}
+                - {installationStatus}
+            {/if}
+        </p>
+    </div>
+{/if}
 </main>
 
 <style>
@@ -808,5 +810,28 @@
         margin-top: 1rem;
         color: #666;
         font-style: italic;
+    }
+
+    .install-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .install-container .installation-status {
+        visibility: hidden;
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #f9f9f9;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        white-space: nowrap;
+        margin-bottom: 5px;
+    }
+
+    .install-container:hover .installation-status {
+        visibility: visible;
     }
 </style>
