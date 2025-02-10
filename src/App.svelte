@@ -1,6 +1,6 @@
 <script>
     import { FlowCalculator } from "./classes/FlowCalculator.class";
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
 
     let strickler = 0;
     let gefaelle = 0;
@@ -216,7 +216,8 @@
     $: umfangEingabeVisible = false;
 
     $: if (selectedQuerschnitt === "Rechteck") {
-        imageSrc = "/fliessgeschwindigkeit_svelte/icons/Rechteck_Ausschnitt.png";
+        imageSrc =
+            "/fliessgeschwindigkeit_svelte/icons/Rechteck_Ausschnitt.png";
         breiteVisible = true;
         hoeheVisible = true;
         breiteobenVisible = false;
@@ -225,7 +226,8 @@
         querschnittEingabeVisible = false;
         umfangEingabeVisible = false;
     } else if (selectedQuerschnitt === "Gleichschenkliges Trapez") {
-        imageSrc = "/fliessgeschwindigkeit_svelte/icons/GleichschenkligesTrapez_Ausschnitt.png";
+        imageSrc =
+            "/fliessgeschwindigkeit_svelte/icons/GleichschenkligesTrapez_Ausschnitt.png";
         breiteVisible = false;
         hoeheVisible = true;
         breiteobenVisible = true;
@@ -234,7 +236,8 @@
         querschnittEingabeVisible = false;
         umfangEingabeVisible = false;
     } else if (selectedQuerschnitt === "Allgemeines Trapez") {
-        imageSrc = "/fliessgeschwindigkeit_svelte/icons/AllgemeinesTrapez_Ausschnitt.png";
+        imageSrc =
+            "/fliessgeschwindigkeit_svelte/icons/AllgemeinesTrapez_Ausschnitt.png";
         breiteVisible = false;
         hoeheVisible = true;
         breiteobenVisible = true;
@@ -243,7 +246,8 @@
         querschnittEingabeVisible = false;
         umfangEingabeVisible = false;
     } else if (selectedQuerschnitt === "Rohrsegment") {
-        imageSrc = "/fliessgeschwindigkeit_svelte/icons/Rohrsegement_Ausschnitt.png";
+        imageSrc =
+            "/fliessgeschwindigkeit_svelte/icons/Rohrsegement_Ausschnitt.png";
         breiteVisible = false;
         hoeheVisible = true;
         breiteobenVisible = true;
@@ -276,7 +280,8 @@
             geschwindigkeitms = 0;
             geschwindigkeitkt = 0;
             durchfluss = 0;
-            message = "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
+            message =
+                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein.";
         } else {
             message = "";
         }
@@ -348,28 +353,28 @@
     let installationStatus = "";
 
     onMount(() => {
-        console.log('onMount ausgeführt');
-        
+        console.log("onMount ausgeführt");
+
         // Check if already installed
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('App läuft bereits als Standalone');
+        if (window.matchMedia("(display-mode: standalone)").matches) {
+            console.log("App läuft bereits als Standalone");
             showInstallButton = false;
             installationStatus = "App ist bereits installiert";
             return;
         }
 
         // Listen for beforeinstallprompt event
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('beforeinstallprompt Event empfangen');
+        window.addEventListener("beforeinstallprompt", (e) => {
+            console.log("beforeinstallprompt Event empfangen");
             e.preventDefault();
             deferredPrompt = e;
             showInstallButton = true;
-            console.log('showInstallButton nach Event:', showInstallButton);
+            console.log("showInstallButton nach Event:", showInstallButton);
         });
 
         // Listen for appinstalled event
-        window.addEventListener('appinstalled', () => {
-            console.log('App wurde erfolgreich installiert');
+        window.addEventListener("appinstalled", () => {
+            console.log("App wurde erfolgreich installiert");
             showInstallButton = false;
             installationStatus = "App wurde erfolgreich installiert";
             deferredPrompt = null;
@@ -377,12 +382,16 @@
     });
 
     async function installApp() {
-        console.log('Install-Button geklickt, deferredPrompt:', !!deferredPrompt);
-        
+        console.log(
+            "Install-Button geklickt, deferredPrompt:",
+            !!deferredPrompt,
+        );
+
         if (!deferredPrompt) {
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             if (isIOS) {
-                installationStatus = "Für iOS: Tippen Sie auf 'Teilen' und dann 'Zum Home-Bildschirm'";
+                installationStatus =
+                    "Für iOS: Tippen Sie auf 'Teilen' und dann 'Zum Home-Bildschirm'";
             } else {
                 installationStatus = "Installation nicht möglich";
             }
@@ -392,21 +401,21 @@
         try {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log('User Entscheidung:', outcome);
-            
-            if (outcome === 'accepted') {
-                console.log('Installation akzeptiert');
+            console.log("User Entscheidung:", outcome);
+
+            if (outcome === "accepted") {
+                console.log("Installation akzeptiert");
                 installationStatus = "Installation erfolgreich";
                 showInstallButton = false;
             } else {
-                console.log('Installation abgelehnt');
+                console.log("Installation abgelehnt");
                 installationStatus = "Installation abgelehnt";
             }
         } catch (error) {
-            console.error('Installationsfehler:', error);
+            console.error("Installationsfehler:", error);
             installationStatus = "Installationsfehler: " + error.message;
         }
-        
+
         deferredPrompt = null;
     }
 </script>
@@ -669,16 +678,18 @@
         </table>
     </div>
     {#if showInstallButton}
-    <div class="install-container">
-        <button on:click={installApp}>Als App installieren</button>
-        <p class="installation-status">
-            Status: {showInstallButton ? 'Button sichtbar' : 'Button versteckt'}
-            {#if installationStatus}
-                - {installationStatus}
-            {/if}
-        </p>
-    </div>
-{/if}
+        <div class="install-container">
+            <button on:click={installApp}>Als App installieren</button>
+            <p class="installation-status">
+                Status: {showInstallButton
+                    ? "Button sichtbar"
+                    : "Button versteckt"}
+                {#if installationStatus}
+                    - {installationStatus}
+                {/if}
+            </p>
+        </div>
+    {/if}
 </main>
 
 <style>
@@ -810,11 +821,6 @@
         margin-top: 1rem;
         color: #666;
         font-style: italic;
-    }
-
-    .install-container {
-        position: relative;
-        display: inline-block;
     }
 
     .install-container .installation-status {
