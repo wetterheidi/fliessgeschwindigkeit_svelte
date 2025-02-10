@@ -1,6 +1,7 @@
 <script>
     import { FlowCalculator } from "./classes/FlowCalculator.class";
     import { onMount } from "svelte";
+    import { version } from '../package.json';  // Version aus package.json importieren
 
     let strickler = 0;
     let gefaelle = 0;
@@ -429,7 +430,7 @@
         />
         <div class="title-container">
             <h1>Berechnung der Fliessgeschwindigkeit</h1>
-            <h3>Version 1.0.0</h3>
+            <h3>Version {version}</h3>
         </div>
     </div>
 
