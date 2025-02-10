@@ -676,6 +676,7 @@
                 </td>
             </tr>
         </table>
+        <hr />
         <div class="install-container">
             <button on:click={installApp} disabled={!showInstallButton}>
                 {showInstallButton ? 'Als App installieren' : 'App installiert'}
