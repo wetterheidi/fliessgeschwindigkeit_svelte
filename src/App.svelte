@@ -679,10 +679,8 @@
     </div>
     {#if showInstallButton}
     <div class="install-container">
-        {#if showInstallButton}
-            <button on:click={installApp}>Als App installieren</button>
-        {/if}
-        <p class="installation-status">
+        <button on:click={installApp}>Als App installieren</button>
+        <div class="installation-status-tooltip">
             {#if showInstallButton}
                 Status: Button sichtbar
                 {#if installationStatus}
@@ -691,7 +689,7 @@
             {:else}
                 {installationStatus || "App ist installiert"}
             {/if}
-        </p>
+        </div>
     </div>
     {/if}
 </main>
@@ -819,12 +817,6 @@
     .form-table label {
         margin-right: 0.5rem;
         margin-left: 0.5rem;
-    }
-
-    .installation-status {
-        margin-top: 1rem;
-        color: #666;
-        font-style: italic;
     }
 
     .install-container {
