@@ -281,7 +281,7 @@
             geschwindigkeitkt = 0;
             durchfluss = 0;
             message =
-                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 5";
+                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 6";
         } else {
             message = "";
         }
@@ -676,22 +676,18 @@
                 </td>
             </tr>
         </table>
-    </div>
-    {#if showInstallButton}
-    <div class="install-container">
-        <button on:click={installApp}>Als App installieren</button>
-        <div class="installation-status-tooltip">
-            {#if showInstallButton}
-                Status: Button sichtbar
-                {#if installationStatus}
-                    - {installationStatus}
+        <div class="install-container">
+            <button on:click={installApp} disabled={!showInstallButton}>
+                {showInstallButton ? 'Als App installieren' : 'App installiert'}
+            </button>
+            <div class="installation-status-tooltip">
+                {#if showInstallButton}
+                    {installationStatus || "App kann installiert werden"}
+                {:else}
+                    {installationStatus || "App ist bereits installiert"}
                 {/if}
-            {:else}
-                {installationStatus || "App ist installiert"}
-            {/if}
+            </div>
         </div>
-    </div>
-    {/if}
 </main>
 
 <style>
@@ -825,8 +821,9 @@
         margin: 1rem 0;
     }
 
-    .installation-status {
+    .installation-status-tooltip {
         visibility: hidden;
+        opacity: 0;
         position: absolute;
         bottom: 100%;
         left: 50%;
@@ -839,9 +836,18 @@
         margin-bottom: 5px;
         color: #666;
         font-style: italic;
+        font-family: "Century Gothic", sans-serif;
+        transition: visibility 0s, opacity 0.2s;
+        pointer-events: none;
     }
 
-    .install-container:hover .installation-status {
+    .install-container:hover .installation-status-tooltip {
         visibility: visible;
+        opacity: 1;
+    }
+
+    button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
     }
 </style>
