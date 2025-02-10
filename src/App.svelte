@@ -427,8 +427,10 @@
             alt="Logo"
             style="width: 150px; height: 150px;"
         />
-        <h1>Berechnung der Fliessgeschwindigkeit</h1>
-        <p>Version 1.0.0</p>
+        <div class="title-container">
+            <h1>Berechnung der Fliessgeschwindigkeit</h1>
+            <h3>Version 1.0.0</h3>
+        </div>
     </div>
 
     <hr />
@@ -824,5 +826,21 @@
     button:disabled {
         background-color: #cccccc;
         cursor: not-allowed;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .title-container h1 {
+        margin-bottom: 0;
+    }
+
+    .title-container h3 {
+        margin-top: 0;
+        color: #666;
     }
 </style>
