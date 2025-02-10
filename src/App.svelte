@@ -281,7 +281,7 @@
             geschwindigkeitkt = 0;
             durchfluss = 0;
             message =
-                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 6";
+                "Bitte geben Sie einen Stricklerindex und ein Gefälle ein. Hover 8";
         } else {
             message = "";
         }
@@ -621,74 +621,47 @@
     <div class="table-container">
         <table class="form-table">
             <tr>
-                <td>
-                    <label for="flaeche">Querschnittsfläche</label>
-                </td>
-                <td>
-                    <span id="flaeche">{flaeche}</span>
-                </td>
-                <td>
-                    <label for="">m<sup>2</sup></label>
-                </td>
+                <td><label for="flaeche">Querschnittsfläche</label></td>
+                <td><span id="flaeche">{flaeche}</span></td>
+                <td><label for="">m<sup>2</sup></label></td>
             </tr>
             <tr>
-                <td>
-                    <label for="umfang">Benetzter Umfang</label>
-                </td>
-                <td>
-                    <span id="umfang">{umfang}</span>
-                </td>
-                <td>
-                    <label for="">m</label>
-                </td>
+                <td><label for="umfang">Benetzter Umfang</label></td>
+                <td><span id="umfang">{umfang}</span></td>
+                <td><label for="">m</label></td>
             </tr>
             <tr>
-                <td>
-                    <label for="geschwindigkeit">Geschwindigkeit</label>
-                </td>
-                <td>
-                    <span id="geschwindigkeitms">{geschwindigkeitms}</span>
-                </td>
-                <td>
-                    <label for=""> m/s</label>
-                </td>
+                <td><label for="geschwindigkeit">Geschwindigkeit</label></td>
+                <td><span id="geschwindigkeitms">{geschwindigkeitms}</span></td>
+                <td><label for=""> m/s</label></td>
             </tr>
             <tr>
-                <td>
-                    <label for="geschwindigkeitkt">Geschwindigkeit</label>
-                </td>
-                <td>
-                    <span id="geschwindigkeitkt">{geschwindigkeitkt}</span>
-                </td>
-                <td>
-                    <label for="">kt</label>
-                </td>
+                <td><label for="geschwindigkeitkt">Geschwindigkeit</label></td>
+                <td><span id="geschwindigkeitkt">{geschwindigkeitkt}</span></td>
+                <td><label for="">kt</label></td>
             </tr>
             <tr>
-                <td>
-                    <label for="durchfluss">Durchfluss</label>
-                </td>
-                <td>
-                    <span id="durchfluss">{durchfluss}</span>
-                </td>
-                <td>
-                    <label for=""> m<sup>3</sup>/s</label>
-                </td>
+                <td><label for="durchfluss">Durchfluss</label></td>
+                <td><span id="durchfluss">{durchfluss}</span></td>
+                <td><label for=""> m<sup>3</sup>/s</label></td>
             </tr>
         </table>
-        <hr />
-        <div class="install-container">
-            <button on:click={installApp} disabled={!showInstallButton}>
-                {showInstallButton ? 'Als App installieren' : 'App installiert'}
-            </button>
-            <div class="installation-status-tooltip">
-                {#if showInstallButton}
-                    {installationStatus || "App kann installiert werden"}
-                {:else}
-                    {installationStatus || "App ist bereits installiert"}
-                {/if}
-            </div>
+    </div>
+    
+    <hr />
+    
+    <div class="install-container">
+        <button on:click={installApp} disabled={!showInstallButton}>
+            {showInstallButton ? 'Als App installieren' : 'App installiert'}
+        </button>
+        <div class="installation-status-tooltip">
+            {#if showInstallButton}
+                {installationStatus || "App kann installiert werden"}
+            {:else}
+                {installationStatus || "App ist bereits installiert"}
+            {/if}
         </div>
+    </div>
 </main>
 
 <style>
