@@ -17,5 +17,8 @@
     "vite": "^4.5.1",
     "vite-plugin-pwa": "^0.21.1",
     "workbox-cli": "^7.3.0"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1"
   }
 }
