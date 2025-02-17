@@ -348,77 +348,6 @@
             gefaelle = parseFloat(gefaelle.toFixed(2));
         }
     }
-
-    let deferredPrompt = null;
-    let showInstallButton = false;
-    let installationStatus = "";
-
-    onMount(() => {
-        console.log("onMount ausgeführt");
-
-        // Check if already installed
-        if (window.matchMedia("(display-mode: standalone)").matches) {
-            console.log("App läuft bereits als Standalone");
-            showInstallButton = false;
-            installationStatus = "App ist bereits installiert";
-            return;
-        }
-
-        // Listen for beforeinstallprompt event
-        window.addEventListener("beforeinstallprompt", (e) => {
-            console.log("beforeinstallprompt Event empfangen");
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallButton = true;
-            console.log("showInstallButton nach Event:", showInstallButton);
-        });
-
-        // Listen for appinstalled event
-        window.addEventListener("appinstalled", () => {
-            console.log("App wurde erfolgreich installiert");
-            showInstallButton = false;
-            installationStatus = "App wurde erfolgreich installiert";
-            deferredPrompt = null;
-        });
-    });
-
-    async function installApp() {
-        console.log(
-            "Install-Button geklickt, deferredPrompt:",
-            !!deferredPrompt,
-        );
-
-        if (!deferredPrompt) {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            if (isIOS) {
-                installationStatus =
-                    "Für iOS: Tippen Sie auf 'Teilen' und dann 'Zum Home-Bildschirm'";
-            } else {
-                installationStatus = "Installation nicht möglich";
-            }
-            return;
-        }
-
-        try {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log("User Entscheidung:", outcome);
-
-            if (outcome === "accepted") {
-                console.log("Installation akzeptiert");
-                installationStatus = "Installation erfolgreich";
-                showInstallButton = false;
-            } else {
-                console.log("Installation abgelehnt");
-                installationStatus = "Installation abgelehnt";
-            }
-        } catch (error) {
-            console.error("Installationsfehler:", error);
-            installationStatus = "Installationsfehler: " + error.message;
-        }
-
-        deferredPrompt = null;
-    }
 </script>
 
 <main> 
@@ -654,18 +583,6 @@
     
     <hr />
     
-    <div class="install-container">
-        <button on:click={installApp} disabled={!showInstallButton}>
-            {showInstallButton ? 'Als App installieren' : 'App installiert'}
-        </button>
-        <div class="installation-status-tooltip">
-            {#if showInstallButton}
-                {installationStatus || "App kann installiert werden"}
-            {:else}
-                {installationStatus || "App ist bereits installiert"}
-            {/if}
-        </div>
-    </div>
 </main>
 
 <style>
@@ -792,43 +709,7 @@
         margin-right: 0.5rem;
         margin-left: 0.5rem;
     }
-
-    .install-container {
-        position: relative;
-        display: inline-block;
-        margin: 1rem 0;
-    }
-
-    .installation-status-tooltip {
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #f9f9f9;
-        padding: 5px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        white-space: nowrap;
-        margin-bottom: 5px;
-        color: #666;
-        font-style: italic;
-        font-family: "Century Gothic", sans-serif;
-        transition: visibility 0s, opacity 0.2s;
-        pointer-events: none;
-    }
-
-    .install-container:hover .installation-status-tooltip {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    button:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-    }
-
+    
     .title-container {
         display: flex;
         flex-direction: column;
