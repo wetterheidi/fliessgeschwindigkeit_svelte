@@ -197,7 +197,7 @@ async function createPortable(platform) {
     const scriptContent = platform === 'win'
         ? `@echo off
 cd %~dp0
-set PORT=8080
+set PORT=8081
 echo Starte Server auf Port %PORT%...
 rem Starte den Server in einem neuen Fenster
 start "Server" node server.js %PORT%
@@ -209,17 +209,32 @@ pause
 `
         : `#!/bin/bash
 cd "$(dirname "$0")"
-PORT=8080
+PORT=8081
 echo "Starte Server auf Port $PORT..."
 chmod +x ./node
 ./node server.js $PORT
+# Warten, um den Output zu sehen
+sleep infinity
 `;
     
     archive.append(scriptContent, { name: startScript, mode: 0o755 });
-    // Icons und Assets hinzufügen
-    archive.directory('public/assets/icons', 'icons');
-    archive.directory('dist/', false);
     
+    // Füge server.js und dist-Verzeichnis hinzu
+    archive.file('server.js', { name: 'server.js' });
+
+    // Wichtig: Stelle sicher, dass das dist-Verzeichnis existiert
+    if (!fs.existsSync('dist')) {
+        console.error('Fehler: dist-Verzeichnis nicht gefunden!');
+        console.log('Bitte führen Sie zuerst "npm run build" aus.');
+        process.exit(1);
+    }
+
+    // Kopiere komplettes dist-Verzeichnis
+    archive.directory('dist', 'dist');
+
+    // Icons und Assets hinzufügen (falls benötigt)
+    archive.directory('public/assets/icons', 'icons');
+
     await archive.finalize();
 
     // Aufräumen: Lösche erst nach erfolgreichem Abschluss des Archivs (macOS)
