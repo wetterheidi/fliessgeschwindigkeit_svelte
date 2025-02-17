@@ -26,43 +26,46 @@ const mimeTypes = {
   '.json': 'application/json',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.webp': 'image/webp',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.eot': 'application/vnd.ms-fontobject'
 };
 
+// Debug-Logging für Asset-Anfragen
 const requestHandler = (req, res) => {
   console.log('Eingehende Anfrage:', req.url);
   
-  let filePath = path.join(DIST_DIR, req.url === '/' ? 'index.html' : req.url);
+  // Entferne "/fliessgeschwindigkeit_svelte" aus der URL falls vorhanden
+  let cleanUrl = req.url.replace('/fliessgeschwindigkeit_svelte', '');
+  
+  // Konstruiere den korrekten Dateipfad
+  let filePath = path.join(DIST_DIR, cleanUrl === '/' ? 'index.html' : cleanUrl);
+  
   console.log('Suche Datei:', filePath);
-  
-  // Sicherstellen, dass der Pfad innerhalb des dist-Verzeichnisses bleibt
-  if (!filePath.startsWith(DIST_DIR)) {
-    console.log('Versuchter Zugriff außerhalb des dist-Verzeichnisses');
-    res.writeHead(403);
-    res.end('Zugriff verweigert');
-    return;
-  }
-  
-  // Wenn die Datei nicht existiert, versuche es als relative Pfad zur index.html
-  if (!fs.existsSync(filePath) && !path.extname(filePath)) {
-    filePath = path.join(__dirname, 'dist', 'index.html');
-    console.log('Fallback zu:', filePath);
-  }
 
-  // Debug: Prüfe ob Datei existiert
+  // Prüfe ob die Datei existiert
   if (!fs.existsSync(filePath)) {
-    console.log('Datei existiert nicht:', filePath);
+    console.log('Datei nicht gefunden, versuche alternatives Verzeichnis...');
+    // Versuche die Datei direkt im dist-Verzeichnis zu finden
+    filePath = path.join(DIST_DIR, path.basename(cleanUrl));
+    console.log('Alternativer Pfad:', filePath);
   }
-
+  
   const extname = path.extname(filePath);
   const contentType = mimeTypes[extname] || 'application/octet-stream';
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
+      console.error('Fehler beim Lesen der Datei:', err);
       if (err.code === 'ENOENT') {
         res.writeHead(404);
-        res.end('Datei nicht gefunden');
+        res.end(`Datei nicht gefunden: ${cleanUrl}`);
       } else {
         res.writeHead(500);
         res.end(`Server Error: ${err.code}`);

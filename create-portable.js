@@ -289,11 +289,36 @@ sleep infinity
         process.exit(1);
     }
 
-    // Kopiere komplettes dist-Verzeichnis
+    // Kopiere komplettes dist-Verzeichnis mit allen Assets
     archive.directory('dist', 'dist');
 
-    // Icons und Assets hinzufügen (falls benötigt)
-    archive.directory('public/assets/icons', 'icons');
+    // Überprüfe und kopiere zusätzliche Asset-Verzeichnisse
+    const assetPaths = [
+        'public',
+        'public/assets',
+        'public/assets/icons',
+        'public/assets/images',
+        'src/assets'
+    ];
+
+    for (const assetPath of assetPaths) {
+        if (fs.existsSync(assetPath)) {
+            console.log(`Füge Assets aus ${assetPath} hinzu...`);
+            archive.directory(assetPath, assetPath);
+        } else {
+            console.log(`Warnung: Verzeichnis ${assetPath} nicht gefunden`);
+        }
+    }
+
+    // Debug-Ausgabe der Verzeichnisstruktur
+    console.log('\nVerzeichnisstruktur der Assets:');
+    assetPaths.forEach(dir => {
+        if (fs.existsSync(dir)) {
+            console.log(`\n${dir}:`);
+            const files = fs.readdirSync(dir);
+            files.forEach(file => console.log(`  - ${file}`));
+        }
+    });
 
     await archive.finalize();
 
