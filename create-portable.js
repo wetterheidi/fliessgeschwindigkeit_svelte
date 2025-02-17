@@ -91,7 +91,67 @@ async function createPortable(platform) {
     const nodeBinary = await downloadNodeBinary(platform);
     let tarPath, extractDir;
     if (platform === 'win') {
-        archive.append(nodeBinary, { name: 'node.exe' });
+        // Erstelle temporäres Unterverzeichnis für die Extraktion
+        extractDir = path.join(tmpDir, 'extract-win');
+        if (fs.existsSync(extractDir)) {
+            fs.rmSync(extractDir, { recursive: true });
+        }
+        fs.mkdirSync(extractDir);
+
+        // Schreibe das ZIP-Archiv
+        const zipPath = path.join(tmpDir, 'node.zip');
+        fs.writeFileSync(zipPath, nodeBinary);
+
+        // Entpacke das ZIP-Archiv mit unzip statt PowerShell
+        await new Promise((resolve, reject) => {
+            exec(`unzip -o "${zipPath}" -d "${extractDir}"`, async (err) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                try {
+                    // Liste alle Dateien im Extraktionsverzeichnis
+                    const files = fs.readdirSync(extractDir);
+                    console.log('Extrahierte Dateien (Windows):', files);
+                    
+                    // Finde das Node.js-Verzeichnis
+                    const nodeDir = files.find(dir => dir.startsWith('node-'));
+                    if (!nodeDir) {
+                        throw new Error('Node.js-Verzeichnis nicht gefunden');
+                    }
+
+                    // Korrigierter Pfad: node.exe liegt direkt im Hauptverzeichnis
+                    const nodePath = path.join(extractDir, nodeDir, 'node.exe');
+                    if (!fs.existsSync(nodePath)) {
+                        console.log('Suche node.exe in alternativen Verzeichnissen...');
+                        // Zeige Verzeichnisstruktur für Debug-Zwecke
+                        exec(`ls -R "${extractDir}"`, (err, stdout) => {
+                            if (!err) console.log('Verzeichnisstruktur:', stdout);
+                        });
+                        throw new Error('node.exe nicht gefunden');
+                    }
+
+                    console.log('Node.exe gefunden unter:', nodePath);
+                    
+                    // Überprüfe Dateigröße und Zugriffsrechte
+                    const stats = fs.statSync(nodePath);
+                    console.log('Node.exe Größe:', stats.size, 'Bytes');
+                    console.log('Node.exe Zugriffsrechte:', stats.mode.toString(8));
+
+                    // Füge die Datei zum Archiv hinzu mit explizitem Buffer-Read
+                    const nodeBuffer = fs.readFileSync(nodePath);
+                    archive.append(nodeBuffer, { name: 'node.exe' });
+                    resolve();
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+
+        // Aufräumen
+        fs.unlinkSync(zipPath);
+        fs.rmSync(extractDir, { recursive: true });
     } else if (platform === 'mac') {
         // Erstelle temporäres Unterverzeichnis für die Extraktion
         extractDir = path.join(tmpDir, 'extract');
